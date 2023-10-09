@@ -1,0 +1,56 @@
+/* reset */
+html,
+body,
+div,
+p,
+ul,
+li,
+dl,
+dt,
+dd,
+em,
+i,
+span,
+a,
+img,
+input,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  padding: 0;
+}
+
+a,
+img,
+input {
+  border: none;
+}
+
+body {
+  font: 14px/1.75 -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+a {
+  text-decoration: none;
+}
+
+ul,
+li {
+  list-style: none;
+}
+
+/* 禁止长按链接与图片弹出菜单 */
+/* 禁止选中文本（如无文本选中需求，此为必选项） */
+/* a,
+img {
+	-webkit-touch-callout: none;
+}
+html,
+body {
+	-webkit-user-select: none;
+	user-select: none;
+} */

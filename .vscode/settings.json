@@ -1,0 +1,6 @@
+{
+  "editor.codeActionsOnSave": {
+    // 保存使用eslint进行修复（格式化）代码
+    "source.fixAll.eslint": true
+  }
+}

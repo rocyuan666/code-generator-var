@@ -1,0 +1,5 @@
+src/assets
+src/common/utils.js
+public
+dist
+node_modules

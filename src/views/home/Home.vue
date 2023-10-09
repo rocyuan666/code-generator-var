@@ -1,6 +1,23 @@
 <template>
-  <div class="home">
-    <h1>代码生成器</h1>
+  <div class="app-container">
+    <el-row>
+      <el-col :span="12">
+        <el-button>Default</el-button>
+        <el-button type="primary">Primary</el-button>
+        <el-button type="success">Success</el-button>
+        <el-button type="info">Info</el-button>
+        <el-button type="warning">Warning</el-button>
+        <el-button type="danger">Danger</el-button></el-col
+      >
+      <el-col :span="12">
+        <el-button plain>Plain</el-button>
+        <el-button type="primary" plain>Primary</el-button>
+        <el-button type="success" plain>Success</el-button>
+        <el-button type="info" plain>Info</el-button>
+        <el-button type="warning" plain>Warning</el-button>
+        <el-button type="danger" plain>Danger</el-button></el-col
+      >
+    </el-row>
   </div>
 </template>
 
@@ -8,19 +25,4 @@
 //
 </script>
 
-<style lang="scss" scoped>
-.home {
-  h1 {
-    font-size: 18px;
-  }
-  .home-nav {
-    a {
-      font-weight: bold;
-      color: #2c3e50;
-      &.router-link-active {
-        color: #ff9999;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

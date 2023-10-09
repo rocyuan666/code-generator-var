@@ -21,10 +21,12 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
+    "element-plus": "^2.3.14",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.6",
     "roc-utils": "^0.2.2",

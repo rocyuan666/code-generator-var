@@ -5,7 +5,7 @@ const cfg = require('./config')
 function createWindow() {
   const mainWindowState = windowState({
     defaultWidth: 1300,
-    defaultHeight: 1000,
+    defaultHeight: 900,
   })
   const win = new BrowserWindow({
     ...mainWindowState,

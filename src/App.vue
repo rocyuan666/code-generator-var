@@ -15,9 +15,4 @@ import { RouterView } from 'vue-router'
 
 <style lang="scss">
 @import '@/assets/css/base.css';
-/* 全局样式 开发时清空 */
-#app {
-  text-align: center;
-  color: #2c3e50;
-}
 </style>

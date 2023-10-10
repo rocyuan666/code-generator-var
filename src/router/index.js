@@ -35,7 +35,7 @@ const router = createRouter({
 // 路由守卫
 router.beforeEach((to, from, next) => {
   if (to.meta.title) {
-    document.title = `${appName} - ${to.meta.title}`
+    // document.title = `${appName} - ${to.meta.title}`
   }
   next()
 })

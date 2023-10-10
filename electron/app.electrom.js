@@ -1,6 +1,8 @@
 const { app, BrowserWindow, Tray } = require('electron')
 const windowState = require('electron-window-state')
+const path = require('path')
 const cfg = require('./config')
+const { defineIpcMain } = require('./ipcMain')
 
 function createWindow() {
   const mainWindowState = windowState({
@@ -12,26 +14,27 @@ function createWindow() {
     title: cfg.app.name,
     icon: cfg.appIcon,
     webPreferences: {
-      // backgroundThrottling: false, // 设置应用在后台正常运行
-      nodeIntegration: true, // 设置能在页面使用nodejs的API
-      contextIsolation: false, // 上下文隔离关闭
-      // preload: path.join(__dirname, 'preload.js'),
+      backgroundThrottling: false, // 设置应用在后台正常运行
+      // nodeIntegration: true, // 设置能在页面使用nodejs的API
+      // contextIsolation: false, // 上下文隔离关闭
+      preload: path.join(__dirname, 'preload.js'),
     },
   })
 
   win.removeMenu()
 
-  // win.webContents.openDevTools()
   if (cfg.env == 'production') {
     win.loadFile(cfg.prodLoadFile)
   } else {
     win.loadURL(cfg.devLoadURL)
+    win.webContents.openDevTools()
   }
 
   mainWindowState.manage(win)
 }
 
 app.whenReady().then(() => {
+  defineIpcMain()
   createWindow()
 
   const icon = cfg.appIcon

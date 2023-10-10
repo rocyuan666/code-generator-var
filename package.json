@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "node script/dev.js",
     "start": "node script/dev_start.js",
-    "ele:dev": "nodemon --exec electron-forge start --watch ./ --ext .html,.js,.jsx,.css,.vue,.scss,.json",
+    "ele:dev": "nodemon --exec electron-forge start --watch ./electron --ext .html,.js,.jsx,.css,.vue,.scss,.json",
     "ele:start": "electron-forge start",
     "build:package": "rimraf out && npm run web:build && electron-forge package",
     "build:make": "rimraf out && npm run web:build && electron-forge make",
@@ -27,8 +27,10 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
     "element-plus": "^2.3.14",
+    "mysql2": "^3.6.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.6",
+    "pinia-plugin-persistedstate": "^3.2.0",
     "roc-utils": "^0.2.2",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3"
@@ -36,6 +38,7 @@
   "devDependencies": {
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
+    "@babel/plugin-transform-private-methods": "^7.22.5",
     "@electron-forge/cli": "^6.2.1",
     "@electron-forge/maker-deb": "^6.2.1",
     "@electron-forge/maker-dmg": "^6.2.1",

@@ -34,6 +34,10 @@ module.exports = defineConfig({
     },
   },
   chainWebpack: (config) => {
+    config.plugin('html').tap((args) => {
+      args[0].title = 'VAR管理平台代码生成器'
+      return args
+    })
     if (process.env.NODE_ENV === 'production') {
       config.optimization.minimizer('terser').tap((args) => {
         // 去掉全部 console.*

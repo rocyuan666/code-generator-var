@@ -1,8 +1,8 @@
 {
-  "name": "code-generator-var",
+  "name": "code-generator-VAR",
   "version": "0.1.0",
   "author": "rocyuan",
-  "description": "VAR管理平台代码生成器",
+  "description": "code-generator-VAR",
   "main": "electron/app.electrom.js",
   "private": true,
   "scripts": {

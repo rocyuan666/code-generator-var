@@ -18,7 +18,7 @@ module.exports = {
   },
   loadingGif: path.join(__dirname, '../', 'assets', 'install.gif'),
   app: {
-    name: 'VAR管理平台代码生成器',
+    name: 'code-generator-VAR',
     version: '0.1.0',
     bundleId: 'top.rocyuan.codeGeneratorVAR',
     copyright: 'Copyright (C) 2023 RocYuan',

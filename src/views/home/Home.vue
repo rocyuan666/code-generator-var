@@ -5,10 +5,10 @@
         <div class="mysql-status mb10">
           <p class="text">
             数据库状态:
-            <el-text type="danger" v-show="mysqlStore.mysqlStatus === enumMysqlStatus['0']">{{
+            <el-text type="danger" v-if="mysqlStore.mysqlStatus === enumMysqlStatus['0']">{{
               mysqlStore.mysqlStatus
             }}</el-text>
-            <el-text type="success" v-show="mysqlStore.mysqlStatus === enumMysqlStatus['1']">
+            <el-text type="success" v-if="mysqlStore.mysqlStatus === enumMysqlStatus['1']">
               {{ mysqlStore.mysqlStatus }} - {{ mysqlStore.form.database }}
             </el-text>
           </p>
@@ -16,24 +16,32 @@
             type="primary"
             size="small"
             @click="handleConnectMysql"
-            v-show="mysqlStore.mysqlStatus === enumMysqlStatus['0']"
+            v-if="mysqlStore.mysqlStatus === enumMysqlStatus['0']"
             >连接</el-button
           >
           <el-button
             type="danger"
             size="small"
             @click="handleConnectMysqlEnd"
-            v-show="mysqlStore.mysqlStatus === enumMysqlStatus['1']"
+            v-if="mysqlStore.mysqlStatus === enumMysqlStatus['1']"
             >断开</el-button
           >
         </div>
         <!-- 数据库表 -->
-        <el-button type="primary" plain @click="handleGetTables">获取表信息</el-button>
+        <el-button type="primary" plain @click="handleGetTables" :loading="loading">
+          获取表信息
+        </el-button>
+        <el-button type="warning" plain @click="handleGenCodeConfig">生成器配置</el-button>
         <el-button type="success" plain @click="handleGenCode">生成代码</el-button>
       </div>
     </el-affix>
-    <el-table :data="mysqlStore.tableInfo">
+    <el-table
+      :data="mysqlStore.tableInfo"
+      empty-text="暂无数据~"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" align="center" />
+      <el-table-column type="index" label="序号" align="center" width="100" />
       <el-table-column prop="TABLE_NAME" label="表名" align="center" />
       <el-table-column prop="TABLE_COMMENT" label="描述" align="center" />
       <el-table-column label="操作" align="center">
@@ -45,17 +53,23 @@
       </el-table-column>
     </el-table>
     <ConnectMysql ref="connectMysqlRef" @updateMysqlStatus="updateMysqlStatus" />
+    <GeneratorConfig ref="generatorConfig" />
+    <TableConfig ref="tableConfig" />
   </div>
 </template>
 
 <script setup name="Home">
-import { getCurrentInstance } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 import { enumMysqlStatus } from '@/enum'
 import ConnectMysql from './components/connectMysql.vue'
+import GeneratorConfig from './components/generatorConfig.vue'
+import TableConfig from './components/tableConfig.vue'
 import useMysqlStore from '@/store/modules/mysql'
 
 const mysqlStore = useMysqlStore()
 const { proxy } = getCurrentInstance()
+
+const loading = ref(false)
 
 /**
  * 连接mysql
@@ -97,14 +111,27 @@ function updateMysqlStatus(status) {
  * 获取表信息
  */
 async function handleGetTables() {
+  loading.value = true
   if (mysqlStore.mysqlStatus == enumMysqlStatus['1']) {
     // 数据库连接成功
     const data = await window.electronApi.getTables(mysqlStore.form.database)
     mysqlStore.setTableInfo(data)
+    proxy.$modal.msgSuccess('获取表信息成功')
+    loading.value = false
   } else {
     // 数据库连接失败
     proxy.$modal.msgError('获取表信息失败，请确保已经连接到数据库')
+    loading.value = false
   }
+}
+
+const selectData = ref([])
+/**
+ * 表格前多选框选中数据
+ * @param {Array} selection
+ */
+function handleSelectionChange(selection) {
+  selectData.value = selection
 }
 
 /**
@@ -112,7 +139,8 @@ async function handleGetTables() {
  * @param {*} row
  */
 function handleTableFieldConfig(row) {
-  proxy.$modal.msgError(`敬请期待-${row.TABLE_NAME}-${row.TABLE_COMMENT}`)
+  proxy.$refs['tableConfig'].handleOpen(row)
+  // proxy.$modal.msgError(`敬请期待-${row.TABLE_NAME}-${row.TABLE_COMMENT}`)
 }
 
 /**
@@ -120,6 +148,13 @@ function handleTableFieldConfig(row) {
  */
 function handleGenCode() {
   proxy.$modal.msgError('敬请期待')
+}
+
+/**
+ * 生成器配置
+ */
+function handleGenCodeConfig() {
+  proxy.$refs['generatorConfig'].handleOpen()
 }
 </script>
 

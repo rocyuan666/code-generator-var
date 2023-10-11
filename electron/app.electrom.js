@@ -1,16 +1,16 @@
 const { app, BrowserWindow, Tray } = require('electron')
-const windowState = require('electron-window-state')
+// const windowState = require('electron-window-state')
 const path = require('path')
 const cfg = require('./config')
 const { defineIpcMain } = require('./ipcMain')
 
 function createWindow() {
-  const mainWindowState = windowState({
-    defaultWidth: 1300,
-    defaultHeight: 900,
-  })
+  // const mainWindowState = windowState({
+  //   defaultWidth: 1300,
+  //   defaultHeight: 900,
+  // })
   const win = new BrowserWindow({
-    ...mainWindowState,
+    // ...mainWindowState,
     title: cfg.app.name,
     icon: cfg.appIcon,
     webPreferences: {
@@ -21,6 +21,7 @@ function createWindow() {
     },
   })
 
+  win.maximize()
   win.removeMenu()
 
   if (cfg.env == 'production') {
@@ -30,7 +31,7 @@ function createWindow() {
     win.webContents.openDevTools()
   }
 
-  mainWindowState.manage(win)
+  // mainWindowState.manage(win)
 }
 
 app.whenReady().then(() => {

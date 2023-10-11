@@ -27,6 +27,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "electron-window-state": "^5.0.3",
     "element-plus": "^2.3.14",
+    "lodash": "^4.17.21",
     "mysql2": "^3.6.1",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.6",

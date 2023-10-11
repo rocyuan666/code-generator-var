@@ -9,8 +9,12 @@ contextBridge.exposeInMainWorld('electronApi', {
   node: () => process.versions.node,
   chrome: () => process.versions.chrome,
   electron: () => process.versions.electron,
+  // 数据库相关
   connectMysql: (connData) => ipcRenderer.invoke('connectMysql', connData),
   connectMysqlEnd: () => ipcRenderer.invoke('connectMysqlEnd'),
   getTables: (databaseName) => ipcRenderer.invoke('getTables', databaseName),
   getFields: (tableName) => ipcRenderer.invoke('getFields', tableName),
+  // 生成器相关
+  getDirPath: () => ipcRenderer.invoke('getDirPath'),
+  getPath: (name) => ipcRenderer.invoke('getPath', name),
 })

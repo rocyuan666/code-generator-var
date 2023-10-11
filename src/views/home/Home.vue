@@ -112,15 +112,14 @@ async function handleGetTables() {
  * @param {*} row
  */
 function handleTableFieldConfig(row) {
-  console.log('表名', row.TABLE_NAME)
-  console.log('表描述', row.TABLE_COMMENT)
+  proxy.$modal.msgError(`敬请期待-${row.TABLE_NAME}-${row.TABLE_COMMENT}`)
 }
 
 /**
  * 生成代码
  */
 function handleGenCode() {
-  console.log('生成代码')
+  proxy.$modal.msgError('敬请期待')
 }
 </script>
 

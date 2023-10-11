@@ -8,9 +8,9 @@ const useMysqlStore = defineStore('mysql', {
     form: {
       host: 'localhost',
       port: '3306',
-      database: 'roc',
-      user: 'root',
-      password: 'root',
+      database: '',
+      user: '',
+      password: '',
     },
     tableInfo: [],
   }),

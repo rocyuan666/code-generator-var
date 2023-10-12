@@ -1,8 +1,8 @@
 <template>
-  <el-dialog :title="title" v-model="open" width="80%" :close-on-click-modal="false" draggable>
+  <el-dialog :title="title" v-model="open" width="96%" :close-on-click-modal="false" draggable>
     <el-divider>表设置</el-divider>
     <el-alert
-      description="本表是否有 添加、编辑、删除、导出、子表功能"
+      description="本表是否有 添加、编辑、删除、导出、子表、api地址功能配置"
       type="warning"
       show-icon
       :closable="false"
@@ -68,7 +68,15 @@
       </el-row>
     </el-form>
     <el-divider>字段设置</el-divider>
+    <el-alert
+      description="本表字段功能配置"
+      type="warning"
+      show-icon
+      :closable="false"
+      class="mb10"
+    />
     <el-table :data="tableList" empty-text="暂无数据~">
+      <el-table-column label="序号" type="index" align="center" width="80"></el-table-column>
       <el-table-column label="字段名" prop="field" align="center">
         <template #default="{ row }">
           <el-input v-model.trim="row.field" placeholder="字段名"></el-input>
@@ -79,7 +87,67 @@
           <el-input v-model.trim="row.label" placeholder="标签名"></el-input>
         </template>
       </el-table-column>
+      <el-table-column label="添加编辑" prop="addOrEdit" align="center">
+        <template #default="{ row }">
+          <el-switch v-model="row.addOrEdit" />
+        </template>
+      </el-table-column>
+      <el-table-column label="列表" prop="list" align="center">
+        <template #default="{ row }">
+          <el-switch v-model="row.list" />
+        </template>
+      </el-table-column>
+      <el-table-column label="查询" prop="query" align="center">
+        <template #default="{ row }">
+          <el-switch v-model="row.query" />
+        </template>
+      </el-table-column>
+      <el-table-column label="查询方式" prop="queryWay" align="center">
+        <template #default="{ row }">
+          <el-select v-model="row.queryWay" placeholder="查询方式" clearable>
+            <el-option label="=" value="EQ" />
+            <el-option label="!=" value="NE" />
+            <el-option label=">" value="GT" />
+            <el-option label=">=" value="GTE" />
+            <el-option label="<" value="LT" />
+            <el-option label="<=" value="LTE" />
+            <el-option label="LIKE" value="LIKE" />
+            <el-option label="BETWEEN" value="BETWEEN" />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="必填" prop="required" align="center">
+        <template #default="{ row }">
+          <el-switch v-model="row.required" />
+        </template>
+      </el-table-column>
+      <el-table-column label="显示类型" prop="display" align="center">
+        <template #default="{ row }">
+          <el-select v-model="row.display" placeholder="显示类型">
+            <el-option label="文本框" value="input" />
+            <el-option label="文本域" value="textarea" />
+            <el-option label="下拉框" value="select" />
+            <el-option label="单选框" value="radio" />
+            <el-option label="复选框" value="checkbox" />
+            <el-option label="日期控件" value="datetime" />
+            <el-option label="图片上传" value="imageUpload" />
+            <el-option label="文件上传" value="fileUpload" />
+            <el-option label="富文本控件" value="editor" />
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="字典标识" prop="dict" align="center">
+        <template #default="{ row }">
+          <el-input v-model.trim="row.dict" placeholder="字典标识"></el-input>
+        </template>
+      </el-table-column>
     </el-table>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="handleClose">确 定</el-button>
+      </div>
+    </template>
   </el-dialog>
 </template>
 
@@ -102,7 +170,19 @@ const table = ref({
   delApi: '/api/tableName/del',
   exportApi: '/api/tableName/export',
 })
-const tableList = ref([{ field: 'name', label: '名称' }])
+const tableList = ref([
+  {
+    field: 'name',
+    label: '姓名',
+    addOrEdit: true,
+    list: true,
+    query: false,
+    queryWay: '',
+    required: false,
+    display: 'input',
+    dict: '',
+  },
+])
 
 function handleOpen(row) {
   title.value = `${row.TABLE_NAME} 表配置`
@@ -119,4 +199,12 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dialog-footer {
+  display: flex;
+  justify-content: center;
+  .el-button {
+    margin: 0 18px;
+  }
+}
+</style>

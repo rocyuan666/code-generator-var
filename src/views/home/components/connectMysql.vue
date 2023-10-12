@@ -28,8 +28,8 @@
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button type="primary" @click="submitForm">连 接</el-button>
       <el-button @click="handleClose">取 消</el-button>
+      <el-button type="primary" @click="submitForm">连 接</el-button>
     </template>
   </el-dialog>
 </template>

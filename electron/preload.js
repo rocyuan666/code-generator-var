@@ -13,7 +13,7 @@ contextBridge.exposeInMainWorld('electronApi', {
   connectMysql: (connData) => ipcRenderer.invoke('connectMysql', connData),
   connectMysqlEnd: () => ipcRenderer.invoke('connectMysqlEnd'),
   getTables: (databaseName) => ipcRenderer.invoke('getTables', databaseName),
-  getFields: (tableName) => ipcRenderer.invoke('getFields', tableName),
+  getFields: (databaseName, tableName) => ipcRenderer.invoke('getFields', databaseName, tableName),
   // 生成器相关
   getDirPath: () => ipcRenderer.invoke('getDirPath'),
   getPath: (name) => ipcRenderer.invoke('getPath', name),

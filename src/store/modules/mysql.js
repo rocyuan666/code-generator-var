@@ -12,14 +12,10 @@ const useMysqlStore = defineStore('mysql', {
       user: '',
       password: '',
     },
-    tableInfo: [],
   }),
   actions: {
     setMysqlStatus(status) {
       this.mysqlStatus = status
-    },
-    setTableInfo(data) {
-      this.tableInfo = data
     },
   },
 })

@@ -36,14 +36,18 @@
       </div>
     </el-affix>
     <el-table
-      :data="mysqlStore.tableInfo"
+      :data="generatorStore.tableInfoList"
       empty-text="暂无数据~"
       @selection-change="handleSelectionChange"
     >
       <el-table-column type="selection" align="center" />
       <el-table-column type="index" label="序号" align="center" width="100" />
-      <el-table-column prop="TABLE_NAME" label="表名" align="center" />
-      <el-table-column prop="TABLE_COMMENT" label="描述" align="center" />
+      <el-table-column prop="name" label="表名" align="center" />
+      <el-table-column prop="comment" label="描述" align="center">
+        <template #default="{ row }">
+          <el-input v-model="row.comment" placeholder="表描述"></el-input>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
           <el-button link type="primary" icon="Tools" @click="handleTableFieldConfig(row)">
@@ -65,8 +69,11 @@ import ConnectMysql from './components/connectMysql.vue'
 import GeneratorConfig from './components/generatorConfig.vue'
 import TableConfig from './components/tableConfig.vue'
 import useMysqlStore from '@/store/modules/mysql'
+import useGeneratorStore from '@/store/modules/generator'
+import { snakeFormatHump } from '@/utils/roc'
 
 const mysqlStore = useMysqlStore()
+const generatorStore = useGeneratorStore()
 const { proxy } = getCurrentInstance()
 
 const loading = ref(false)
@@ -90,7 +97,7 @@ function handleConnectMysqlEnd() {
         .then(() => {
           proxy.$modal.msgSuccess('mysql已断开')
           mysqlStore.setMysqlStatus(enumMysqlStatus['0'])
-          mysqlStore.setTableInfo([])
+          generatorStore.setTableInfoList([])
         })
         .catch((err) => {
           proxy.$modal.msgError('mysql断开错误: ' + err)
@@ -115,7 +122,13 @@ async function handleGetTables() {
   if (mysqlStore.mysqlStatus == enumMysqlStatus['1']) {
     // 数据库连接成功
     const data = await window.electronApi.getTables(mysqlStore.form.database)
-    mysqlStore.setTableInfo(data)
+    const tableInfoList = data.map((item) => ({
+      name: item.TABLE_NAME,
+      comment: item.TABLE_COMMENT,
+    }))
+    // 记录需要的表数据
+    generatorStore.setTableInfoList(tableInfoList)
+    handleFieldData(tableInfoList)
     proxy.$modal.msgSuccess('获取表信息成功')
     loading.value = false
   } else {
@@ -123,6 +136,48 @@ async function handleGetTables() {
     proxy.$modal.msgError('获取表信息失败，请确保已经连接到数据库')
     loading.value = false
   }
+}
+
+/**
+ * 处理生成表及字段默认数据json
+ */
+function handleFieldData(tableInfoList) {
+  tableInfoList.forEach(async (item) => {
+    const tableName = snakeFormatHump(item.name)
+    generatorStore.tableFieldConfig[item.name] = {
+      add: true,
+      edit: true,
+      del: true,
+      export: true,
+      subTable: '',
+      listApi: `/api/${tableName}/list`,
+      detailApi: `/api/${tableName}/detail`,
+      addApi: `/api/${tableName}/add`,
+      editApi: `/api/${tableName}/edit`,
+      delApi: `/api/${tableName}/del`,
+      exportApi: `/api/${tableName}/export`,
+      field: [],
+    }
+    const data = await window.electronApi.getFields(mysqlStore.form.database, item.name)
+    const fieldInfoList = data.map((item) => ({
+      name: item.COLUMN_NAME,
+      comment: item.COLUMN_COMMENT,
+      key: item.COLUMN_KEY, // PRI: 主键
+    }))
+    fieldInfoList.forEach((fieldItem) => {
+      generatorStore.tableFieldConfig[item.name].field.push({
+        field: fieldItem.name,
+        label: fieldItem.comment,
+        addOrEdit: true,
+        list: true,
+        query: false,
+        queryWay: '',
+        required: false,
+        display: 'input',
+        dict: '',
+      })
+    })
+  })
 }
 
 const selectData = ref([])

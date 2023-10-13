@@ -9,11 +9,16 @@ const useGeneratorStore = defineStore('generator', {
       projectName: 'code-generator-VAR项目',
       outPutDir: homePath,
     },
+    tableInfoList: [],
+    tableFieldConfig: {},
   }),
   actions: {
     setGenConfig(genConfig) {
       this.genConfig.projectName = genConfig.projectName
       this.genConfig.outPutDir = genConfig.outPutDir
+    },
+    setTableInfoList(tableInfoList) {
+      this.tableInfoList = tableInfoList
     },
   },
 })

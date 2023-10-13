@@ -8,61 +8,90 @@
       :closable="false"
       class="mb10"
     />
-    <el-form :model="table" :inline="true">
+    <el-form :model="generatorStore.tableFieldConfig[tableName]" :inline="true">
       <el-row>
         <el-col :span="6">
           <el-form-item label="添加" prop="add">
-            <el-switch v-model="table.add" />
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].add" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="编辑" prop="edit">
-            <el-switch v-model="table.edit" />
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].edit" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="删除" prop="del">
-            <el-switch v-model="table.del" />
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].del" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="导出" prop="export">
-            <el-switch v-model="table.export" />
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].export" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="子表表名" prop="subTable">
-            <el-input v-model.trim="table.subTable" placeholder="子表名，没有则不填写"></el-input>
+          <el-form-item label="选择子表" prop="subTable">
+            <el-select
+              v-model="generatorStore.tableFieldConfig[tableName].subTable"
+              placeholder="选择子表"
+              clearable
+            >
+              <el-option
+                v-for="item in generatorStore.tableInfoList"
+                :key="item.name"
+                :label="item.comment"
+                :value="item.name"
+              ></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="列表接口" prop="listApi">
-            <el-input v-model.trim="table.listApi" placeholder="列表api地址"></el-input>
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].listApi"
+              placeholder="列表api地址"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="详情接口" prop="detailApi">
-            <el-input v-model.trim="table.detailApi" placeholder="详情api地址"></el-input>
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].detailApi"
+              placeholder="详情api地址"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="添加接口" prop="addApi">
-            <el-input v-model.trim="table.addApi" placeholder="添加api地址"></el-input>
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].addApi"
+              placeholder="添加api地址"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="编辑接口" prop="editApi">
-            <el-input v-model.trim="table.editApi" placeholder="编辑api地址"></el-input>
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].editApi"
+              placeholder="编辑api地址"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="删除接口" prop="delApi">
-            <el-input v-model.trim="table.delApi" placeholder="删除api地址"></el-input>
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].delApi"
+              placeholder="删除api地址"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="导出接口" prop="exportApi">
-            <el-input v-model.trim="table.exportApi" placeholder="导出api地址"></el-input>
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].exportApi"
+              placeholder="导出api地址"
+            ></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -75,7 +104,7 @@
       :closable="false"
       class="mb10"
     />
-    <el-table :data="tableList" empty-text="暂无数据~">
+    <el-table :data="generatorStore.tableFieldConfig[tableName].field" empty-text="暂无数据~">
       <el-table-column label="序号" type="index" align="center" width="80"></el-table-column>
       <el-table-column label="字段名" prop="field" align="center">
         <template #default="{ row }">
@@ -144,7 +173,6 @@
     </el-table>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
         <el-button type="primary" @click="handleClose">确 定</el-button>
       </div>
     </template>
@@ -153,39 +181,16 @@
 
 <script setup name="TableConfig">
 import { ref } from 'vue'
+import useGeneratorStore from '@/store/modules/generator'
 
+const generatorStore = useGeneratorStore()
+const tableName = ref('')
 const title = ref('')
 const open = ref(false)
 
-const table = ref({
-  add: true,
-  edit: true,
-  del: true,
-  export: true,
-  subTable: '',
-  listApi: '/api/tableName/list',
-  detailApi: '/api/tableName/detail',
-  addApi: '/api/tableName/add',
-  editApi: '/api/tableName/edit',
-  delApi: '/api/tableName/del',
-  exportApi: '/api/tableName/export',
-})
-const tableList = ref([
-  {
-    field: 'name',
-    label: '姓名',
-    addOrEdit: true,
-    list: true,
-    query: false,
-    queryWay: '',
-    required: false,
-    display: 'input',
-    dict: '',
-  },
-])
-
 function handleOpen(row) {
-  title.value = `${row.TABLE_NAME} 表配置`
+  tableName.value = row.name
+  title.value = `${row.name} 表配置`
   open.value = true
 }
 

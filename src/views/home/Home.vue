@@ -32,7 +32,9 @@
           获取表信息
         </el-button>
         <el-button type="warning" plain @click="handleGenCodeConfig">生成器配置</el-button>
-        <el-button type="success" plain @click="handleGenCode">生成代码</el-button>
+        <el-button type="success" plain @click="handleGenCode" :disabled="!selectData.length">
+          生成代码
+        </el-button>
       </div>
     </el-affix>
     <el-table
@@ -43,11 +45,7 @@
       <el-table-column type="selection" align="center" />
       <el-table-column type="index" label="序号" align="center" width="100" />
       <el-table-column prop="name" label="表名" align="center" />
-      <el-table-column prop="comment" label="描述" align="center">
-        <template #default="{ row }">
-          <el-input v-model="row.comment" placeholder="表描述"></el-input>
-        </template>
-      </el-table-column>
+      <el-table-column prop="comment" label="描述" align="center" />
       <el-table-column label="操作" align="center">
         <template #default="{ row }">
           <el-button link type="primary" icon="Tools" @click="handleTableFieldConfig(row)">
@@ -70,7 +68,6 @@ import GeneratorConfig from './components/generatorConfig.vue'
 import TableConfig from './components/tableConfig.vue'
 import useMysqlStore from '@/store/modules/mysql'
 import useGeneratorStore from '@/store/modules/generator'
-import { snakeFormatHump } from '@/utils/roc'
 
 const mysqlStore = useMysqlStore()
 const generatorStore = useGeneratorStore()
@@ -122,13 +119,8 @@ async function handleGetTables() {
   if (mysqlStore.mysqlStatus == enumMysqlStatus['1']) {
     // 数据库连接成功
     const data = await window.electronApi.getTables(mysqlStore.form.database)
-    const tableInfoList = data.map((item) => ({
-      name: item.TABLE_NAME,
-      comment: item.TABLE_COMMENT,
-    }))
     // 记录需要的表数据
-    generatorStore.setTableInfoList(tableInfoList)
-    handleFieldData(tableInfoList)
+    generatorStore.setTableInfoList(data)
     proxy.$modal.msgSuccess('获取表信息成功')
     loading.value = false
   } else {
@@ -138,48 +130,7 @@ async function handleGetTables() {
   }
 }
 
-/**
- * 处理生成表及字段默认数据json
- */
-function handleFieldData(tableInfoList) {
-  tableInfoList.forEach(async (item) => {
-    const tableName = snakeFormatHump(item.name)
-    generatorStore.tableFieldConfig[item.name] = {
-      add: true,
-      edit: true,
-      del: true,
-      export: true,
-      subTable: '',
-      listApi: `/api/${tableName}/list`,
-      detailApi: `/api/${tableName}/detail`,
-      addApi: `/api/${tableName}/add`,
-      editApi: `/api/${tableName}/edit`,
-      delApi: `/api/${tableName}/del`,
-      exportApi: `/api/${tableName}/export`,
-      field: [],
-    }
-    const data = await window.electronApi.getFields(mysqlStore.form.database, item.name)
-    const fieldInfoList = data.map((item) => ({
-      name: item.COLUMN_NAME,
-      comment: item.COLUMN_COMMENT,
-      key: item.COLUMN_KEY, // PRI: 主键
-    }))
-    fieldInfoList.forEach((fieldItem) => {
-      generatorStore.tableFieldConfig[item.name].field.push({
-        field: fieldItem.name,
-        label: fieldItem.comment,
-        addOrEdit: true,
-        list: true,
-        query: false,
-        queryWay: '',
-        required: false,
-        display: 'input',
-        dict: '',
-      })
-    })
-  })
-}
-
+/** 选中的数据 */
 const selectData = ref([])
 /**
  * 表格前多选框选中数据
@@ -195,7 +146,6 @@ function handleSelectionChange(selection) {
  */
 function handleTableFieldConfig(row) {
   proxy.$refs['tableConfig'].handleOpen(row)
-  // proxy.$modal.msgError(`敬请期待-${row.TABLE_NAME}-${row.TABLE_COMMENT}`)
 }
 
 /**

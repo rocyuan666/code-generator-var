@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" v-model="open" width="96%" :close-on-click-modal="false" draggable>
+  <el-dialog :title="title" v-model="open" width="96%" :close-on-click-modal="false">
     <el-divider>表设置</el-divider>
     <el-alert
       description="本表是否有 添加、编辑、删除、导出、子表、api地址功能配置"
@@ -8,8 +8,8 @@
       :closable="false"
       class="mb10"
     />
-    <el-form :model="generatorStore.tableFieldConfig[tableName]" :inline="true">
-      <el-row>
+    <el-form :model="generatorStore.tableFieldConfig[tableName]">
+      <el-row :gutter="40">
         <el-col :span="6">
           <el-form-item label="添加" prop="add">
             <el-switch v-model="generatorStore.tableFieldConfig[tableName].add" />
@@ -31,34 +31,34 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="选择子表" prop="subTable">
-            <el-select
-              v-model="generatorStore.tableFieldConfig[tableName].subTable"
-              placeholder="选择子表"
-              clearable
-            >
-              <el-option
-                v-for="item in generatorStore.tableInfoList"
-                :key="item.name"
-                :label="item.comment"
-                :value="item.name"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="列表接口" prop="listApi">
+          <el-form-item label="添加权限" prop="addPermisstion">
             <el-input
-              v-model.trim="generatorStore.tableFieldConfig[tableName].listApi"
-              placeholder="列表api地址"
+              v-model.trim="generatorStore.tableFieldConfig[tableName].addPermisstion"
+              placeholder="添加权限标识"
             ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="详情接口" prop="detailApi">
+          <el-form-item label="编辑权限" prop="editPermisstion">
             <el-input
-              v-model.trim="generatorStore.tableFieldConfig[tableName].detailApi"
-              placeholder="详情api地址"
+              v-model.trim="generatorStore.tableFieldConfig[tableName].editPermisstion"
+              placeholder="编辑权限标识"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="删除权限" prop="delPermisstion">
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].delPermisstion"
+              placeholder="删除权限标识"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="导出权限" prop="exportPermisstion">
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].exportPermisstion"
+              placeholder="导出权限标识"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -94,6 +94,46 @@
             ></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="6">
+          <el-form-item label="列表接口" prop="listApi">
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].listApi"
+              placeholder="列表api地址"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="详情接口" prop="detailApi">
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].detailApi"
+              placeholder="详情api地址"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="页面名称" prop="name">
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].name"
+              placeholder="页面名称"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="选择子表" prop="subTable">
+            <el-select
+              v-model="generatorStore.tableFieldConfig[tableName].subTable"
+              placeholder="选择子表"
+              clearable
+            >
+              <el-option
+                v-for="item in generatorStore.tableInfoList"
+                :key="item.name"
+                :label="item.comment"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <el-divider>字段设置</el-divider>
@@ -126,14 +166,9 @@
           <el-switch v-model="row.list" />
         </template>
       </el-table-column>
-      <el-table-column label="查询" prop="query" align="center">
+      <el-table-column label="查询方式" prop="query" align="center">
         <template #default="{ row }">
-          <el-switch v-model="row.query" />
-        </template>
-      </el-table-column>
-      <el-table-column label="查询方式" prop="queryWay" align="center">
-        <template #default="{ row }">
-          <el-select v-model="row.queryWay" placeholder="查询方式" clearable>
+          <el-select v-model="row.query" placeholder="查询方式" clearable>
             <el-option label="=" value="EQ" />
             <el-option label="!=" value="NE" />
             <el-option label=">" value="GT" />
@@ -158,10 +193,11 @@
             <el-option label="下拉框" value="select" />
             <el-option label="单选框" value="radio" />
             <el-option label="复选框" value="checkbox" />
-            <el-option label="日期控件" value="datetime" />
+            <el-option label="日期" value="date" />
+            <el-option label="日期时间" value="datetime" />
             <el-option label="图片上传" value="imageUpload" />
             <el-option label="文件上传" value="fileUpload" />
-            <el-option label="富文本控件" value="editor" />
+            <el-option label="富文本" value="editor" />
           </el-select>
         </template>
       </el-table-column>

@@ -1,11 +1,5 @@
 <template>
-  <el-dialog
-    title="连接mysql数据库"
-    v-model="open"
-    width="500"
-    :close-on-click-modal="false"
-    draggable
-  >
+  <el-dialog title="连接mysql数据库" v-model="open" width="500" :close-on-click-modal="false">
     <el-form ref="mysqlFormRef" :model="mysqlStore.form" :rules="rules" label-width="70">
       <el-form-item label="主机" prop="host">
         <el-input v-model.trim="mysqlStore.form.host" placeholder="请输入主机名" />

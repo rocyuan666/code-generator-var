@@ -1,4 +1,5 @@
 const { app, dialog } = require('electron')
+const path = require('path')
 
 /**
  * 获取 应用程序目录
@@ -24,8 +25,12 @@ const { app, dialog } = require('electron')
  * logs应用程序的日志文件夹
  * crashDumps 崩溃转储文件存储的目录。
  */
-function getPath(event, name) {
-  return app.getPath(name)
+function getPath(event, name, addAppDir = false) {
+  if (addAppDir) {
+    return path.resolve(app.getPath(name), cfg.app.name)
+  } else {
+    return app.getPath(name)
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="生成器配置" v-model="open" width="500" :close-on-click-modal="false" draggable>
+  <el-dialog title="生成器配置" v-model="open" width="500" :close-on-click-modal="false">
     <el-form ref="genConfigFormRef" :model="form" :rules="rules" label-width="80">
       <el-form-item label="项目名称" prop="projectName">
         <el-input v-model.trim="form.projectName" placeholder="请输入项目名称"></el-input>

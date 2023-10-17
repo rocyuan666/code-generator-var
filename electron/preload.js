@@ -16,5 +16,5 @@ contextBridge.exposeInMainWorld('electronApi', {
   getFields: (databaseName, tableName) => ipcRenderer.invoke('getFields', databaseName, tableName),
   // 生成器相关
   getDirPath: () => ipcRenderer.invoke('getDirPath'),
-  getPath: (name) => ipcRenderer.invoke('getPath', name),
+  getPath: (name, addAppDir = false) => ipcRenderer.invoke('getPath', name, addAppDir),
 })

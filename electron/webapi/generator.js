@@ -1,5 +1,6 @@
 const { app, dialog } = require('electron')
 const path = require('path')
+const cfg = require('../config')
 
 /**
  * 获取 应用程序目录

@@ -57,7 +57,56 @@ function getDirPath() {
   })
 }
 
+/**
+ * 选择Ejs文件路径
+ */
+function getEjsFilePath(event) {
+  return new Promise((reslove, reject) => {
+    dialog
+      .showOpenDialog({
+        title: '请选择Ejs文件',
+        filters: [{ name: 'Ejs', extensions: ['ejs'] }],
+        properties: ['openFile'],
+      })
+      .then((result) => {
+        if (result.canceled) {
+          reject('取消选择')
+        } else {
+          reslove(result.filePaths)
+        }
+      })
+      .catch((err) => {
+        reject('失败' + err)
+      })
+  })
+}
+
+/**
+ * 选择文件路径
+ */
+function getFilePath(event) {
+  return new Promise((reslove, reject) => {
+    dialog
+      .showOpenDialog({
+        title: '请选择文件',
+        properties: ['openFile'],
+      })
+      .then((result) => {
+        if (result.canceled) {
+          reject('取消选择')
+        } else {
+          reslove(result.filePaths)
+        }
+      })
+      .catch((err) => {
+        reject('失败' + err)
+      })
+  })
+}
+
 module.exports = {
   getPath,
   getDirPath,
+  getFilePath,
+  getEjsFilePath,
 }

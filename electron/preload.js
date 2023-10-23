@@ -23,4 +23,5 @@ contextBridge.exposeInMainWorld('electronApi', {
   getPath: (name, addAppDir = false) => ipcRenderer.invoke('getPath', name, addAppDir),
   genCode: (tableNameList = [], genJsonData = {}) =>
     ipcRenderer.invoke('genCode', tableNameList, genJsonData),
+  openExplorer: (path) => ipcRenderer.invoke('openExplorer', path),
 })

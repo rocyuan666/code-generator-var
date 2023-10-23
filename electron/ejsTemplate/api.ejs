@@ -1,0 +1,9 @@
+import request from '@/utils/request'
+
+// 查询<%= comment %>
+export function list<%= fn.snakeFormatHump(name, true) %>() {
+    return request({
+        url: '<%= listApi %>',
+        method: 'get',
+    })
+}

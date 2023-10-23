@@ -111,9 +111,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="页面名称" prop="name">
+          <el-form-item label="页面名称" prop="comment">
             <el-input
-              v-model.trim="generatorStore.tableFieldConfig[tableName].name"
+              v-model.trim="generatorStore.tableFieldConfig[tableName].comment"
               placeholder="页面名称"
             ></el-input>
           </el-form-item>

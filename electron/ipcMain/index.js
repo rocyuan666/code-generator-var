@@ -7,6 +7,7 @@ const {
   getEjsFilePath,
   genCode,
   getEjsTemplateFilePath,
+  openExplorer,
 } = require('../webapi/generator')
 
 function defineIpcMain() {
@@ -22,6 +23,7 @@ function defineIpcMain() {
   ipcMain.handle('getEjsFilePath', getEjsFilePath)
   ipcMain.handle('getEjsTemplateFilePath', getEjsTemplateFilePath)
   ipcMain.handle('genCode', genCode)
+  ipcMain.handle('openExplorer', openExplorer)
 }
 
 module.exports = {

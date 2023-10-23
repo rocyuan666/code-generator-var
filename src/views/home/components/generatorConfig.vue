@@ -1,12 +1,21 @@
 <template>
-  <el-dialog title="生成器配置" v-model="open" width="900" :close-on-click-modal="false">
+  <el-dialog title="生成器配置" v-model="open" width="70%" :close-on-click-modal="false">
     <el-form ref="genConfigFormRef" :model="form" :rules="rules" label-width="auto">
       <el-divider>生成设置</el-divider>
       <el-form-item label="项目名称" prop="projectName">
-        <el-input v-model.trim="form.projectName" placeholder="请输入项目名称"></el-input>
+        <el-input
+          v-model.trim="form.projectName"
+          :title="form.projectName"
+          placeholder="请输入项目名称"
+        ></el-input>
       </el-form-item>
       <el-form-item label="输出目录" prop="outPutDir" @click="dSelectDirPath">
-        <el-input v-model.trim="form.outPutDir" placeholder="请选择输出目录" readonly>
+        <el-input
+          v-model.trim="form.outPutDir"
+          :title="form.outPutDir"
+          placeholder="请选择输出目录"
+          readonly
+        >
           <template #suffix>
             <el-icon><Folder /></el-icon>
           </template>
@@ -23,6 +32,7 @@
       <el-form-item label="api模板" prop="apiEjsFilePath" @click="dSelectEjsFilePath('api')">
         <el-input
           v-model.trim="form.apiEjsFilePath"
+          :title="form.apiEjsFilePath"
           placeholder="请选择生成api接口的ejs模板文件"
           readonly
         >
@@ -34,6 +44,7 @@
       <el-form-item label="列表模板" prop="listEjsFilePath" @click="dSelectEjsFilePath('list')">
         <el-input
           v-model.trim="form.listEjsFilePath"
+          :title="form.listEjsFilePath"
           placeholder="请选择生成列表的ejs模板文件"
           readonly
         >
@@ -49,6 +60,7 @@
       >
         <el-input
           v-model.trim="form.addEditEjsFilePath"
+          :title="form.addEditEjsFilePath"
           placeholder="请选择生成添加编辑的ejs模板文件"
           readonly
         >
@@ -60,6 +72,7 @@
       <el-form-item label="路由模板" prop="routerEjsFilePath" @click="dSelectEjsFilePath('router')">
         <el-input
           v-model.trim="form.routerEjsFilePath"
+          :title="form.routerEjsFilePath"
           placeholder="请选择生成路由信息的ejs模板文件"
           readonly
         >

@@ -1,12 +1,15 @@
-const { app, dialog } = require('electron')
+const { app, dialog, shell } = require('electron')
 const fs = require('fs-extra')
 const path = require('path')
 const cfg = require('../config')
 const ejs = require('ejs')
+const { snakeFormatHump } = require('../utils')
 
 /**
  * 获取 应用程序目录
+ * @param {*} event
  * @param {String} name
+ * @param {Boolean} addAppDir
  *
  * home 用户的 home 文件夹（主目录）
  * appData 每个用户的应用程序数据目录，默认情况下指向：
@@ -46,6 +49,15 @@ function getEjsTemplateFilePath(event, name) {
   const appDataDir = path.resolve(app.getPath('appData'), cfg.app.name)
   const appEjsDataDir = path.resolve(appDataDir, 'ejs')
   return path.resolve(appEjsDataDir, name)
+}
+
+/**
+ * 文件资源管理器打开目录
+ * @param event
+ * @param path
+ */
+function openExplorer(event, path) {
+  shell.openPath(path)
 }
 
 /**
@@ -118,46 +130,68 @@ function getFilePath(event) {
   })
 }
 
+/**
+ * 生成代码
+ * @param event
+ * @param tableNameList
+ * @param genJsonData
+ * @returns {Promise<unknown>}
+ */
 function genCode(event, tableNameList = [], genJsonData = {}) {
-  return new Promise((resolve, reject) => {
+  // eslint-disable-next-line no-async-promise-executor
+  return new Promise(async (resolve, reject) => {
+    /** @type {Array} */
     const selectTableNameList = JSON.parse(tableNameList)
+    /** @type {Object} */
     const genConfig = JSON.parse(genJsonData).genConfig
+    /** @type {Object} */
     const tableFieldConfig = JSON.parse(genJsonData).tableFieldConfig
 
-    // ejs.renderFile(genConfig.apiEjsFilePath, tableFieldConfig, (err, str) => {
-    //   if (err) return console.log('发生错误：', err)
-    //   fs.outputFileSync(
-    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
-    //     str
-    //   )
-    // })
+    /**
+     * 渲染ejs
+     * @param ejsPath
+     * @param outPath
+     * @param ejsContentData
+     */
+    function renderEjsFile(ejsPath, outPath, ejsContentData) {
+      return new Promise((resolve, reject) => {
+        ejs.renderFile(ejsPath, ejsContentData, (err, str) => {
+          if (err) return reject(err)
+          fs.outputFileSync(
+            path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', outPath),
+            str
+          )
+          resolve('输出成功')
+        })
+      })
+    }
 
-    // ejs.renderFile(genConfig.routerEjsFilePath, tableFieldConfig, (err, str) => {
-    //   if (err) return console.log('发生错误：', err)
-    //   fs.outputFileSync(
-    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
-    //     str
-    //   )
-    // })
-
-    // ejs.renderFile(genConfig.listEjsFilePath, tableFieldConfig, (err, str) => {
-    //   if (err) return console.log('发生错误：', err)
-    //   fs.outputFileSync(
-    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
-    //     str
-    //   )
-    // })
-
-    // ejs.renderFile(genConfig.addEditEjsFilePath, tableFieldConfig, (err, str) => {
-    //   if (err) return console.log('发生错误：', err)
-    //   fs.outputFileSync(
-    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
-    //     str
-    //   )
-    // })
-
-    // genConfig.outPutDir // 输出目录
-    // genConfig.projectName // 项目名称
+    for (const tableName of selectTableNameList) {
+      await renderEjsFile(genConfig.apiEjsFilePath, `api/${snakeFormatHump(tableName)}.js`, {
+        ...tableFieldConfig[tableName],
+        fn: { snakeFormatHump },
+      })
+      await renderEjsFile(genConfig.routerEjsFilePath, 'router/genRouters.js', {
+        ...tableFieldConfig[tableName],
+        fn: { snakeFormatHump },
+      })
+      await renderEjsFile(
+        genConfig.listEjsFilePath,
+        `views/${snakeFormatHump(tableName)}/index.vue`,
+        {
+          ...tableFieldConfig[tableName],
+          fn: { snakeFormatHump },
+        }
+      )
+      await renderEjsFile(
+        genConfig.addEditEjsFilePath,
+        `views/${snakeFormatHump(tableName)}/addOrEdit.vue`,
+        {
+          ...tableFieldConfig[tableName],
+          fn: { snakeFormatHump },
+        }
+      )
+    }
     resolve({ selectTableNameList, genConfig, tableFieldConfig })
   })
 }
@@ -169,4 +203,5 @@ module.exports = {
   getEjsFilePath,
   genCode,
   getEjsTemplateFilePath,
+  openExplorer,
 }

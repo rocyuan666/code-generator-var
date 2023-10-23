@@ -74,7 +74,8 @@ const useGeneratorStore = defineStore('generator', {
           listApi: `/api/${tableName}/list`,
           detailApi: `/api/${tableName}/detail`,
           subTable: '',
-          name: `${item.comment}`,
+          name: item.name,
+          comment: `${item.comment}`,
           field: [],
         }
         const data = await window.electronApi.getFields(mysqlStore.form.database, item.name)

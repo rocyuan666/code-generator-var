@@ -159,12 +159,18 @@ function handleGenCode() {
   }
   window.electronApi
     .genCode(JSON.stringify(selectTableNameList), JSON.stringify(genJsonData))
-    .then((res) => {
-      console.log('生成表', res)
-      proxy.$modal.msgSuccess('生成成功')
+    .then(() => {
+      proxy.$modal
+        .confirm('生成成功，打开生成代码目录')
+        .then(() => {
+          window.electronApi.openExplorer(generatorStore.genConfig.outPutDir)
+        })
+        .catch((err) => {
+          console.log('取消')
+        })
     })
-    .catch((err) => {
-      proxy.$modal.msgError('生成失败')
+    .catch(() => {
+      proxy.$modal.msgError('生成失败！请重试~')
     })
 }
 

@@ -3,6 +3,7 @@ const { app, BrowserWindow, Tray } = require('electron')
 const path = require('path')
 const cfg = require('./config')
 const { defineIpcMain } = require('./ipcMain')
+const { initEjsTemplate } = require('./utils')
 
 function createWindow() {
   // const mainWindowState = windowState({
@@ -37,6 +38,7 @@ function createWindow() {
 app.whenReady().then(() => {
   defineIpcMain()
   createWindow()
+  initEjsTemplate()
 
   const icon = cfg.appIcon
   const tray = new Tray(icon)

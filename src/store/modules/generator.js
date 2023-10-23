@@ -4,6 +4,10 @@ import useMysqlStore from '@/store/modules/mysql'
 
 const mysqlStore = useMysqlStore()
 const homePath = await window.electronApi.getPath('home', true)
+const apiEjsTemplatePath = await window.electronApi.getEjsTemplateFilePath('api.ejs')
+const routerEjsTemplatePath = await window.electronApi.getEjsTemplateFilePath('router.ejs')
+const listEjsTemplatePath = await window.electronApi.getEjsTemplateFilePath('list.ejs')
+const addOrEditEjsTemplatePath = await window.electronApi.getEjsTemplateFilePath('addOrEdit.ejs')
 
 const useGeneratorStore = defineStore('generator', {
   persist: true,
@@ -11,6 +15,10 @@ const useGeneratorStore = defineStore('generator', {
     genConfig: {
       projectName: 'code-generator-VAR项目',
       outPutDir: homePath,
+      apiEjsFilePath: apiEjsTemplatePath,
+      listEjsFilePath: listEjsTemplatePath,
+      addEditEjsFilePath: addOrEditEjsTemplatePath,
+      routerEjsFilePath: routerEjsTemplatePath,
     },
     tableInfoList: [],
     tableFieldConfig: {},

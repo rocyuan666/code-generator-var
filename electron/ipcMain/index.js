@@ -1,6 +1,13 @@
 const { ipcMain } = require('electron')
 const { connectMysql, connectMysqlEnd, getTables, getFields } = require('../webapi/mysql')
-const { getPath, getDirPath, getFilePath, getEjsFilePath } = require('../webapi/generator')
+const {
+  getPath,
+  getDirPath,
+  getFilePath,
+  getEjsFilePath,
+  genCode,
+  getEjsTemplateFilePath,
+} = require('../webapi/generator')
 
 function defineIpcMain() {
   // 数据库相关
@@ -13,6 +20,8 @@ function defineIpcMain() {
   ipcMain.handle('getPath', getPath)
   ipcMain.handle('getFilePath', getFilePath)
   ipcMain.handle('getEjsFilePath', getEjsFilePath)
+  ipcMain.handle('getEjsTemplateFilePath', getEjsTemplateFilePath)
+  ipcMain.handle('genCode', genCode)
 }
 
 module.exports = {

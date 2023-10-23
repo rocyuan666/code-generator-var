@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron')
 
 /**
  * 暴露给 window 的api
- * 访问：window.rpcApi.xxx
+ * 访问：window.electronApi.xxx
  * 使用 preload 需要开启 webPreferences.contextIsolation
  */
 contextBridge.exposeInMainWorld('electronApi', {
@@ -18,5 +18,9 @@ contextBridge.exposeInMainWorld('electronApi', {
   getDirPath: () => ipcRenderer.invoke('getDirPath'),
   getFilePath: () => ipcRenderer.invoke('getFilePath'),
   getEjsFilePath: () => ipcRenderer.invoke('getEjsFilePath'),
+  getEjsTemplateFilePath: (ejsTemplateName) =>
+    ipcRenderer.invoke('getEjsTemplateFilePath', ejsTemplateName),
   getPath: (name, addAppDir = false) => ipcRenderer.invoke('getPath', name, addAppDir),
+  genCode: (tableNameList = [], genJsonData = {}) =>
+    ipcRenderer.invoke('genCode', tableNameList, genJsonData),
 })

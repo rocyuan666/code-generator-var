@@ -152,7 +152,20 @@ function handleTableFieldConfig(row) {
  * 生成代码
  */
 function handleGenCode() {
-  proxy.$modal.msgError('敬请期待')
+  const selectTableNameList = selectData.value.map((item) => item.name)
+  const genJsonData = {
+    genConfig: generatorStore.genConfig,
+    tableFieldConfig: generatorStore.tableFieldConfig,
+  }
+  window.electronApi
+    .genCode(JSON.stringify(selectTableNameList), JSON.stringify(genJsonData))
+    .then((res) => {
+      console.log('生成表', res)
+      proxy.$modal.msgSuccess('生成成功')
+    })
+    .catch((err) => {
+      proxy.$modal.msgError('生成失败')
+    })
 }
 
 /**

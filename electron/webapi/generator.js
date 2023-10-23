@@ -1,6 +1,8 @@
 const { app, dialog } = require('electron')
+const fs = require('fs-extra')
 const path = require('path')
 const cfg = require('../config')
+const ejs = require('ejs')
 
 /**
  * 获取 应用程序目录
@@ -35,10 +37,22 @@ function getPath(event, name, addAppDir = false) {
 }
 
 /**
+ * 获取模板模板路径
+ * @param {*} event
+ * @param {"api.ejs" | "router.ejs" | "list.ejs" | "addOrEdit.ejs"} name
+ * @returns
+ */
+function getEjsTemplateFilePath(event, name) {
+  const appDataDir = path.resolve(app.getPath('appData'), cfg.app.name)
+  const appEjsDataDir = path.resolve(appDataDir, 'ejs')
+  return path.resolve(appEjsDataDir, name)
+}
+
+/**
  * 选择目录路径
  */
 function getDirPath() {
-  return new Promise((reslove, reject) => {
+  return new Promise((resolve, reject) => {
     dialog
       .showOpenDialog({
         title: '请选择目录',
@@ -48,7 +62,7 @@ function getDirPath() {
         if (result.canceled) {
           reject('取消选择')
         } else {
-          reslove(result.filePaths)
+          resolve(result.filePaths)
         }
       })
       .catch((err) => {
@@ -61,7 +75,7 @@ function getDirPath() {
  * 选择Ejs文件路径
  */
 function getEjsFilePath(event) {
-  return new Promise((reslove, reject) => {
+  return new Promise((resolve, reject) => {
     dialog
       .showOpenDialog({
         title: '请选择Ejs文件',
@@ -72,7 +86,7 @@ function getEjsFilePath(event) {
         if (result.canceled) {
           reject('取消选择')
         } else {
-          reslove(result.filePaths)
+          resolve(result.filePaths)
         }
       })
       .catch((err) => {
@@ -85,7 +99,7 @@ function getEjsFilePath(event) {
  * 选择文件路径
  */
 function getFilePath(event) {
-  return new Promise((reslove, reject) => {
+  return new Promise((resolve, reject) => {
     dialog
       .showOpenDialog({
         title: '请选择文件',
@@ -95,7 +109,7 @@ function getFilePath(event) {
         if (result.canceled) {
           reject('取消选择')
         } else {
-          reslove(result.filePaths)
+          resolve(result.filePaths)
         }
       })
       .catch((err) => {
@@ -104,9 +118,55 @@ function getFilePath(event) {
   })
 }
 
+function genCode(event, tableNameList = [], genJsonData = {}) {
+  return new Promise((resolve, reject) => {
+    const selectTableNameList = JSON.parse(tableNameList)
+    const genConfig = JSON.parse(genJsonData).genConfig
+    const tableFieldConfig = JSON.parse(genJsonData).tableFieldConfig
+
+    // ejs.renderFile(genConfig.apiEjsFilePath, tableFieldConfig, (err, str) => {
+    //   if (err) return console.log('发生错误：', err)
+    //   fs.outputFileSync(
+    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
+    //     str
+    //   )
+    // })
+
+    // ejs.renderFile(genConfig.routerEjsFilePath, tableFieldConfig, (err, str) => {
+    //   if (err) return console.log('发生错误：', err)
+    //   fs.outputFileSync(
+    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
+    //     str
+    //   )
+    // })
+
+    // ejs.renderFile(genConfig.listEjsFilePath, tableFieldConfig, (err, str) => {
+    //   if (err) return console.log('发生错误：', err)
+    //   fs.outputFileSync(
+    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
+    //     str
+    //   )
+    // })
+
+    // ejs.renderFile(genConfig.addEditEjsFilePath, tableFieldConfig, (err, str) => {
+    //   if (err) return console.log('发生错误：', err)
+    //   fs.outputFileSync(
+    //     path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', 'api', 'api.js'),
+    //     str
+    //   )
+    // })
+
+    // genConfig.outPutDir // 输出目录
+    // genConfig.projectName // 项目名称
+    resolve({ selectTableNameList, genConfig, tableFieldConfig })
+  })
+}
+
 module.exports = {
   getPath,
   getDirPath,
   getFilePath,
   getEjsFilePath,
+  genCode,
+  getEjsTemplateFilePath,
 }

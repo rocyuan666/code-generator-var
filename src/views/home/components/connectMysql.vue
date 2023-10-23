@@ -2,22 +2,39 @@
   <el-dialog title="连接mysql数据库" v-model="open" width="500" :close-on-click-modal="false">
     <el-form ref="mysqlFormRef" :model="mysqlStore.form" :rules="rules" label-width="auto">
       <el-form-item label="主机" prop="host">
-        <el-input v-model.trim="mysqlStore.form.host" placeholder="请输入主机名" />
+        <el-input
+          v-model.trim="mysqlStore.form.host"
+          placeholder="请输入主机名"
+          @keyup.enter="submitForm"
+        />
       </el-form-item>
       <el-form-item label="端口" prop="port">
-        <el-input v-model.trim="mysqlStore.form.port" placeholder="请输入端口号" />
+        <el-input
+          v-model.trim="mysqlStore.form.port"
+          placeholder="请输入端口号"
+          @keyup.enter="submitForm"
+        />
       </el-form-item>
       <el-form-item label="数据库" prop="database">
-        <el-input v-model.trim="mysqlStore.form.database" placeholder="请输入数据库名" />
+        <el-input
+          v-model.trim="mysqlStore.form.database"
+          placeholder="请输入数据库名"
+          @keyup.enter="submitForm"
+        />
       </el-form-item>
       <el-form-item label="用户名" prop="user">
-        <el-input v-model.trim="mysqlStore.form.user" placeholder="请输入用户名" />
+        <el-input
+          v-model.trim="mysqlStore.form.user"
+          placeholder="请输入用户名"
+          @keyup.enter="submitForm"
+        />
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input
           v-model.trim="mysqlStore.form.password"
           type="password"
           placeholder="请输入密码"
+          @keyup.enter="submitForm"
         />
       </el-form-item>
     </el-form>

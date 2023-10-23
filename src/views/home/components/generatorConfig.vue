@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="生成器配置" v-model="open" width="700" :close-on-click-modal="false">
+  <el-dialog title="生成器配置" v-model="open" width="900" :close-on-click-modal="false">
     <el-form ref="genConfigFormRef" :model="form" :rules="rules" label-width="auto">
       <el-divider>生成设置</el-divider>
       <el-form-item label="项目名称" prop="projectName">
@@ -14,7 +14,7 @@
       </el-form-item>
       <el-divider>模板设置</el-divider>
       <el-alert
-        description="只支持ejs模板，如需要自定义模板请使用ejs编写，不选择默认使用内置模板!"
+        description="只支持ejs模板，如需要自定义模板请使用ejs编写!"
         type="warning"
         show-icon
         :closable="false"
@@ -150,6 +150,10 @@ function submitForm() {
 function handleOpen() {
   form.value.outPutDir = generatorStore.genConfig.outPutDir
   form.value.projectName = generatorStore.genConfig.projectName
+  form.value.apiEjsFilePath = generatorStore.genConfig.apiEjsFilePath
+  form.value.listEjsFilePath = generatorStore.genConfig.listEjsFilePath
+  form.value.addEditEjsFilePath = generatorStore.genConfig.addEditEjsFilePath
+  form.value.routerEjsFilePath = generatorStore.genConfig.routerEjsFilePath
   open.value = true
 }
 

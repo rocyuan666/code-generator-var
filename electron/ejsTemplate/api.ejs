@@ -1,9 +1,81 @@
 import request from '@/utils/request'
 
-// 查询<%= comment %>
-export function list<%= fn.snakeFormatHump(name, true) %>() {
+/**
+ * 查询 <%= comment %> 列表
+ * @param {Object} data
+ * @returns
+ */
+export function list<%= fn.snakeFormatHump(name, true) %>(data) {
     return request({
         url: '<%= listApi %>',
-        method: 'get',
+        method: 'GET',
+        params: data,
+    })
+}
+
+/**
+* 导出 <%= comment %> 列表
+* @param {Object} data
+* @returns
+*/
+export function export<%= fn.snakeFormatHump(name, true) %>(data) {
+    return request({
+        url: '<%= exportApi %>',
+        method: 'GET',
+        params: data,
+    })
+}
+
+/**
+ * 查询 <%= comment %> 详情
+ * @param {Number} id
+ * @returns
+ */
+export function detail<%= fn.snakeFormatHump(name, true) %>(id) {
+    return request({
+        url: '<%= detailApi %>',
+        method: 'GET',
+        params: {
+            id,
+        }
+    })
+}
+
+/**
+ * 新增 <%= comment %>
+ * @param {Object} data
+ * @returns
+ */
+export function add<%= fn.snakeFormatHump(name, true) %>(data) {
+    return request({
+        url: '<%= addApi %>',
+        method: 'POST',
+        data,
+    })
+}
+
+/**
+ * 修改 <%= comment %>
+ * @param {Object} data
+ * @returns
+ */
+export function edit<%= fn.snakeFormatHump(name, true) %>(data) {
+    return request({
+        url: '<%= editApi %>',
+        method: 'PUT',
+        data,
+    })
+}
+
+/**
+ * 删除 <%= comment %>
+ * @param {{ids: Number | Number[]}} data
+ * @returns
+ */
+export function del<%= fn.snakeFormatHump(name, true) %>(data) {
+    return request({
+        url: '<%= delApi %>',
+        method: 'DELETE',
+        params: data,
     })
 }

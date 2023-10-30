@@ -14,19 +14,6 @@ export function list<%= fn.snakeFormatHump(name, true) %>(data) {
 }
 
 /**
-* 导出 <%= comment %> 列表
-* @param {Object} data
-* @returns
-*/
-export function export<%= fn.snakeFormatHump(name, true) %>(data) {
-    return request({
-        url: '<%= exportApi %>',
-        method: 'GET',
-        params: data,
-    })
-}
-
-/**
  * 查询 <%= comment %> 详情
  * @param {Number} id
  * @returns
@@ -76,6 +63,19 @@ export function del<%= fn.snakeFormatHump(name, true) %>(data) {
     return request({
         url: '<%= delApi %>',
         method: 'DELETE',
+        params: data,
+    })
+}
+
+/**
+* 导出 <%= comment %> 列表
+* @param {Object} data
+* @returns
+*/
+export function export<%= fn.snakeFormatHump(name, true) %>(data) {
+    return request({
+        url: '<%= exportApi %>',
+        method: 'GET',
         params: data,
     })
 }

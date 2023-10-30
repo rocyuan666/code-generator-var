@@ -87,6 +87,7 @@ const useGeneratorStore = defineStore('generator', {
         fieldInfoList.forEach((fieldItem) => {
           this.tableFieldConfig[item.name].field.push({
             field: snakeFormatHump(fieldItem.name),
+            key: fieldItem.key, // PRI: 主键
             label: fieldItem.comment,
             addOrEdit: true,
             list: true,

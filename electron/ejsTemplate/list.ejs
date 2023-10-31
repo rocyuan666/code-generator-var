@@ -3,39 +3,78 @@
       <!-- 查询条件 -->
       <el-form ref="queryFormRef" :model="queryParams" v-show="showSearch" label-width="auto" :inline="true" @submit.prevent>
         <%_ for (const field of fieldList) { _%>
+        <%_ if (field.query) { _%>
+        <%# 已配置查询 _%>
         <%_ if (field.display === 'input') { _%>
         <%# 文本框 %>
         <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
-          <el-input v-model="queryFormRef.<%= field.name %>" placeholder="<%= field.label %>" clearable @keyup.enter="handleQuery" style="width: 214px"></el-input>
+          <el-input v-model="queryParams.<%= field.name %>" placeholder="<%= field.label %>" clearable @keyup.enter="handleQuery" style="width: 214px"></el-input>
         </el-form-item>
         <%_ } else if (field.display === 'inputNumber') { _%>
         <%# 数字框 %>
         <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
-          <el-input v-model="queryFormRef.<%= field.name %>" placeholder="<%= field.label %>" clearable @keyup.enter="handleQuery" style="width: 214px" type="number"></el-input>
+          <el-input v-model="queryParams.<%= field.name %>" placeholder="<%= field.label %>" clearable @keyup.enter="handleQuery" style="width: 214px" type="number"></el-input>
         </el-form-item>
         <%_ } else if (field.display === 'textarea') { _%>
         <%# 文本域 %>
         <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
-          <el-input v-model="queryFormRef.<%= field.name %>" placeholder="<%= field.label %>" @keyup.enter="handleQuery" type="textarea"></el-input>
+          <el-input v-model="queryParams.<%= field.name %>" placeholder="<%= field.label %>" @keyup.enter="handleQuery" type="textarea"></el-input>
         </el-form-item>
         <%_ } else if (field.display === 'select') { _%>
         <%# 下拉框 %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-select v-model="queryParams.<%= field.name %>" placeholder="<%= field.label %>" clearable>
+            <%# 是否有字典 %>
+            <%_ if (field.dict) { _%>
+            <el-option v-for="dict in <%= field.dict %>" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
+            <%_ } else { _%>
+            <el-option label="选择字典生成或自行编写数据" value="1"></el-option>
+            <%_ } _%>
+          </el-select>
+        </el-form-item>
         <%_ } else if (field.display === 'radio') { _%>
         <%# 单选框 %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-radio-group v-model="queryParams.<%= field.name %>">
+            <%# 是否有字典 %>
+            <%_ if (field.dict) { _%>
+            <el-radio v-for="dict in <%= field.dict %>" :key="dict.value" :label="dict.value">{{ dict.label }}</el-radio>
+            <%_ } else { _%>
+            <el-radio label="1">选择字典生成或自行编写数据</el-radio>
+            <%_ } _%>
+          </el-radio-group>
+        </el-form-item>
         <%_ } else if (field.display === 'checkbox') { _%>
         <%# 复选框 %>
-        <%_ } else if (field.display === 'date') { _%>
-        <%# 日期选择 %>
-        <%_ } else if (field.display === 'datetime') { _%>
-        <%# 日期时间选择 %>
+        <%_ } else if (field.display === 'date' && field.query !== 'BETWEEN') { _%>
+        <%# 日期（非范围） %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-date-picker v-model="queryParams.<%= field.name %>" type="date" value-format="YYYY-MM-DD" placeholder="请选择<%= field.label %>" clearable></el-date-picker>
+        </el-form-item>
+        <%_ } else if (field.display === 'date' && field.query === 'BETWEEN') { _%>
+        <%# 日期（范围） %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-date-picker v-model="queryParams.<%= field.name %>" type="daterange" value-format="YYYY-MM-DD" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable></el-date-picker>
+        </el-form-item>
+        <%_ } else if (field.display === 'datetime' && field.query !== 'BETWEEN') { _%>
+        <%# 日期时间（非范围） %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-date-picker v-model="queryParams.<%= field.name %>" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择<%= field.label %>" clearable></el-date-picker>
+        </el-form-item>
+        <%_ } else if (field.display === 'datetime' && field.query === 'BETWEEN') { _%>
+        <%# 日期时间（范围） %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-date-picker v-model="queryParams.<%= field.name %>" type="datetimerange" value-format="YYYY-MM-DD HH:mm:ss" range-separator="-" start-placeholder="开始日期" end-placeholder="结束日期" clearable></el-date-picker>
+        </el-form-item>
         <%_ } else if (field.display === 'imageUpload') { _%>
         <%# 图片上传 %>
         <%_ } else if (field.display === 'fileUpload') { _%>
         <%# 文件上传 %>
         <%_ } else if (field.display === 'editor') { _%>
         <%# 富文本 %>
-        <%_ } else() { _%>
+        <%_ } else { %>
         <%# 其他 %>
+        <%_ } _%>
         <%_ } _%>
         <%_ } _%>
         <el-form-item>
@@ -43,19 +82,54 @@
           <el-button @click="resetQuery" v-autoBlur>重置</el-button>
         </el-form-item>
       </el-form>
+      <%_ if (hasAdd || hasDel || hasExport) { _%>
+      <!-- 操作按钮 -->
+      <el-row :gutter="10" class="mb8">
+        <%_ if (hasAdd) { _%>
+        <el-col :span="1.5" v-hasPermi="['<%= addPermisstion %>']">
+            <el-button type="primary" plain icon="Plus" @click="handleAdd" v-autoBlur>新增</el-button>
+        </el-col>
+        <%_ } _%>
+        <%_ if (hasDel) { _%>
+        <el-col :span="1.5" v-hasPermi="['<%= delPermisstion %>']">
+            <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-autoBlur>删除</el-button>
+        </el-col>
+        <%_ } _%>
+        <%_ if (hasExport) { _%>
+        <el-col :span="1.5" v-hasPermi="['<%= exportPermisstion %>']">
+            <el-button type="success" plain icon="Download" @click="handleExport" :loading="btnExportLoading" v-autoBlur>导出</el-button>
+        </el-col>
+        <%_ } _%>
+        <right-toolbar :search="true" v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
+      </el-row>
+      <%_ } _%>
+      <!-- 表格 -->
+      <el-table :data="tableData" empty-text="暂无数据~" @selection-change="handleSelectionChange" v-loading="loading">
+        <el-table-column type="selection" width="55" align="center" />
+      </el-table>
+      <!-- 分页 -->
+      <pagination v-if="total > 0" :total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit" @pagination="getList"></pagination>
     </div>
 </template>
 
 <script setup name="<%= fn.snakeFormatHump(name, true) %>">
-import { ref } from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { list<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>.js'
+
+const { proxy } = getCurrentInstance()
 
 const showSearch = ref(true)
 const queryParams = ref({
   page: 1,
   limit: 10,
+  <%_ for (const field of fieldList) { _%>
+  <%_ if (field.query) { _%>
+  <%= field.name %>: null,
+  <%_ } _%>
+  <%_ } _%>
 })
+
 /**
  * 搜索按钮操作
  */
@@ -64,9 +138,18 @@ function handleQuery() {
   getList();
 }
 
+/**
+ * 重置搜索按钮操作
+ */
+function resetQuery() {
+  proxy.resetForm('queryFormRef')
+  handleQuery()
+}
+
 const loading = ref(false)
-const list = ref([])
+const tableData = ref([])
 const total = ref(0)
+
 /**
  * 获取 <%= comment %> 列表数据
  */
@@ -74,7 +157,7 @@ function getList() {
   loading.value = true
   const _queryParams = cloneDeep(queryParams.value)
   list<%= fn.snakeFormatHump(name, true) %>(_queryParams).then((res) => {
-    list.value = res.data.rows
+    tableData.value = res.data.rows
     total.value = res.data.rows
     loading.value = false
   })

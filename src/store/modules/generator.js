@@ -59,10 +59,10 @@ const useGeneratorStore = defineStore('generator', {
         const tableName = snakeFormatHump(item.name)
         const TableName = snakeFormatHump(item.name, true)
         this.tableFieldConfig[item.name] = {
-          add: true,
-          edit: true,
-          del: true,
-          export: true,
+          hasAdd: true,
+          hasEdit: true,
+          hasDel: true,
+          hasExport: true,
           addPermisstion: `${TableName}.add`,
           editPermisstion: `${TableName}.edit`,
           delPermisstion: `${TableName}.del`,

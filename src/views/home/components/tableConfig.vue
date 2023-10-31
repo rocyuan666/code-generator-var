@@ -11,23 +11,23 @@
     <el-form :model="generatorStore.tableFieldConfig[tableName]">
       <el-row :gutter="40">
         <el-col :span="6">
-          <el-form-item label="添加" prop="add">
-            <el-switch v-model="generatorStore.tableFieldConfig[tableName].add" />
+          <el-form-item label="添加" prop="hasAdd">
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].hasAdd" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="编辑" prop="edit">
-            <el-switch v-model="generatorStore.tableFieldConfig[tableName].edit" />
+          <el-form-item label="编辑" prop="hasEdit">
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].hasEdit" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="删除" prop="del">
-            <el-switch v-model="generatorStore.tableFieldConfig[tableName].del" />
+          <el-form-item label="删除" prop="hasDel">
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].hasDel" />
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="导出" prop="export">
-            <el-switch v-model="generatorStore.tableFieldConfig[tableName].export" />
+          <el-form-item label="导出" prop="hasExport">
+            <el-switch v-model="generatorStore.tableFieldConfig[tableName].hasExport" />
           </el-form-item>
         </el-col>
         <el-col :span="6">

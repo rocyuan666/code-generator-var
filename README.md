@@ -36,10 +36,10 @@ Please select the project type to create:
 生成器内部暴露给 `ejs` 模板的数据:
 
 ```
-add: true,
-edit: true,
-del: true,
-export: true,
+hasAdd: true,
+hasEdit: true,
+hasDel: true,
+hasExport: true,
 addPermisstion: 'TableName.add',
 editPermisstion: 'TableName.edit',
 delPermisstion: 'TableName.del',
@@ -75,19 +75,19 @@ fn: {
 ```
 ## 数据说明
 
-### `add`
+### `hasAdd`
 `type: Boolean`  
 是否有添加功能
 
-### `edit`
+### `hasEdit`
 `type: Boolean`  
 是否有编辑功能
 
-### `del`
+### `hasDel`
 `type: Boolean`  
 是否有删除功能
 
-### `export`
+### `hasExport`
 `type: Boolean`  
 是否有导出功能
 

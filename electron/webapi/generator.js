@@ -166,39 +166,43 @@ function genCode(event, tableNameList = [], genJsonData = {}) {
       })
     }
 
-    for (const tableName of selectTableNameList) {
-      // 子表配置
-      if (tableFieldConfig[tableName].subTable) {
-        const subTableName = tableFieldConfig[tableName].subTable
-        tableFieldConfig[tableName]['subTableFieldConfig'] = tableFieldConfig[subTableName]
-        tableFieldConfig[tableName]['_sub'] = tableFieldConfig[tableName]['subTableFieldConfig']
+    try {
+      for (const tableName of selectTableNameList) {
+        // 子表配置
+        if (tableFieldConfig[tableName].subTable) {
+          const subTableName = tableFieldConfig[tableName].subTable
+          tableFieldConfig[tableName]['subTableFieldConfig'] = tableFieldConfig[subTableName]
+          tableFieldConfig[tableName]['_sub'] = tableFieldConfig[tableName]['subTableFieldConfig']
+        }
+        await renderEjsFile(genConfig.apiEjsFilePath, `api/${snakeFormatHump(tableName)}.js`, {
+          ...tableFieldConfig[tableName],
+          fn: { snakeFormatHump },
+        })
+        await renderEjsFile(genConfig.routerEjsFilePath, 'router/genRouters.js', {
+          ...tableFieldConfig[tableName],
+          fn: { snakeFormatHump },
+        })
+        await renderEjsFile(
+          genConfig.listEjsFilePath,
+          `views/${snakeFormatHump(tableName)}/index.vue`,
+          {
+            ...tableFieldConfig[tableName],
+            fn: { snakeFormatHump },
+          }
+        )
+        await renderEjsFile(
+          genConfig.addEditEjsFilePath,
+          `views/${snakeFormatHump(tableName)}/addOrEdit.vue`,
+          {
+            ...tableFieldConfig[tableName],
+            fn: { snakeFormatHump },
+          }
+        )
       }
-      await renderEjsFile(genConfig.apiEjsFilePath, `api/${snakeFormatHump(tableName)}.js`, {
-        ...tableFieldConfig[tableName],
-        fn: { snakeFormatHump },
-      })
-      await renderEjsFile(genConfig.routerEjsFilePath, 'router/genRouters.js', {
-        ...tableFieldConfig[tableName],
-        fn: { snakeFormatHump },
-      })
-      await renderEjsFile(
-        genConfig.listEjsFilePath,
-        `views/${snakeFormatHump(tableName)}/index.vue`,
-        {
-          ...tableFieldConfig[tableName],
-          fn: { snakeFormatHump },
-        }
-      )
-      await renderEjsFile(
-        genConfig.addEditEjsFilePath,
-        `views/${snakeFormatHump(tableName)}/addOrEdit.vue`,
-        {
-          ...tableFieldConfig[tableName],
-          fn: { snakeFormatHump },
-        }
-      )
+      resolve({ selectTableNameList, genConfig, tableFieldConfig })
+    } catch (error) {
+      reject(error)
     }
-    resolve({ selectTableNameList, genConfig, tableFieldConfig })
   })
 }
 

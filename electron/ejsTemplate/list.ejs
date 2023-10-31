@@ -1,13 +1,86 @@
 <template>
     <div class="app-container">
-        <p><%= name %></p>
-        <p><%= fn.snakeFormatHump(name) %></p>
-        <p><%= comment %></p>
+      <!-- 查询条件 -->
+      <el-form ref="queryFormRef" :model="queryParams" v-show="showSearch" label-width="auto" :inline="true" @submit.prevent>
+        <%_ for (const field of fieldList) { _%>
+        <%_ if (field.display === 'input') { _%>
+        <%# 文本框 %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-input v-model="queryFormRef.<%= field.name %>" placeholder="<%= field.label %>" clearable @keyup.enter="handleQuery" style="width: 214px"></el-input>
+        </el-form-item>
+        <%_ } else if (field.display === 'inputNumber') { _%>
+        <%# 数字框 %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-input v-model="queryFormRef.<%= field.name %>" placeholder="<%= field.label %>" clearable @keyup.enter="handleQuery" style="width: 214px" type="number"></el-input>
+        </el-form-item>
+        <%_ } else if (field.display === 'textarea') { _%>
+        <%# 文本域 %>
+        <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+          <el-input v-model="queryFormRef.<%= field.name %>" placeholder="<%= field.label %>" @keyup.enter="handleQuery" type="textarea"></el-input>
+        </el-form-item>
+        <%_ } else if (field.display === 'select') { _%>
+        <%# 下拉框 %>
+        <%_ } else if (field.display === 'radio') { _%>
+        <%# 单选框 %>
+        <%_ } else if (field.display === 'checkbox') { _%>
+        <%# 复选框 %>
+        <%_ } else if (field.display === 'date') { _%>
+        <%# 日期选择 %>
+        <%_ } else if (field.display === 'datetime') { _%>
+        <%# 日期时间选择 %>
+        <%_ } else if (field.display === 'imageUpload') { _%>
+        <%# 图片上传 %>
+        <%_ } else if (field.display === 'fileUpload') { _%>
+        <%# 文件上传 %>
+        <%_ } else if (field.display === 'editor') { _%>
+        <%# 富文本 %>
+        <%_ } else() { _%>
+        <%# 其他 %>
+        <%_ } _%>
+        <%_ } _%>
+        <el-form-item>
+          <el-button type="primary" @click="handleQuery" v-autoBlur>搜索</el-button>
+          <el-button @click="resetQuery" v-autoBlur>重置</el-button>
+        </el-form-item>
+      </el-form>
     </div>
 </template>
 
-<script setup name="<%= fn.snakeFormatHump(name) %>">
-//
+<script setup name="<%= fn.snakeFormatHump(name, true) %>">
+import { ref } from 'vue'
+import { cloneDeep } from 'lodash-es'
+import { list<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>.js'
+
+const showSearch = ref(true)
+const queryParams = ref({
+  page: 1,
+  limit: 10,
+})
+/**
+ * 搜索按钮操作
+ */
+function handleQuery() {
+  queryParams.value.page = 1;
+  getList();
+}
+
+const loading = ref(false)
+const list = ref([])
+const total = ref(0)
+/**
+ * 获取 <%= comment %> 列表数据
+ */
+function getList() {
+  loading.value = true
+  const _queryParams = cloneDeep(queryParams.value)
+  list<%= fn.snakeFormatHump(name, true) %>(_queryParams).then((res) => {
+    list.value = res.data.rows
+    total.value = res.data.rows
+    loading.value = false
+  })
+}
+
+getList()
 </script>
 
 <style lang="scss" scoped></style>

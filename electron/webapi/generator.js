@@ -167,6 +167,12 @@ function genCode(event, tableNameList = [], genJsonData = {}) {
     }
 
     for (const tableName of selectTableNameList) {
+      // 子表配置
+      if (tableFieldConfig[tableName].subTable) {
+        const subTableName = tableFieldConfig[tableName].subTable
+        tableFieldConfig[tableName]['subTableFieldConfig'] = tableFieldConfig[subTableName]
+        tableFieldConfig[tableName]['_sub'] = tableFieldConfig[tableName]['subTableFieldConfig']
+      }
       await renderEjsFile(genConfig.apiEjsFilePath, `api/${snakeFormatHump(tableName)}.js`, {
         ...tableFieldConfig[tableName],
         fn: { snakeFormatHump },

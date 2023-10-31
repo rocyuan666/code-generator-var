@@ -144,11 +144,11 @@
       :closable="false"
       class="mb10"
     />
-    <el-table :data="generatorStore.tableFieldConfig[tableName].field" empty-text="暂无数据~">
+    <el-table :data="generatorStore.tableFieldConfig[tableName].fieldList" empty-text="暂无数据~">
       <el-table-column label="序号" type="index" align="center" width="80"></el-table-column>
-      <el-table-column label="字段名" prop="field" align="center">
+      <el-table-column label="字段名" prop="name" align="center">
         <template #default="{ row }">
-          <el-input v-model.trim="row.field" placeholder="字段名"></el-input>
+          <el-input v-model.trim="row.name" placeholder="字段名"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="标签名" prop="label" align="center">
@@ -189,6 +189,7 @@
         <template #default="{ row }">
           <el-select v-model="row.display" placeholder="显示类型">
             <el-option label="文本框" value="input" />
+            <el-option label="数字框" value="inputNumber" />
             <el-option label="文本域" value="textarea" />
             <el-option label="下拉框" value="select" />
             <el-option label="单选框" value="radio" />
@@ -199,6 +200,11 @@
             <el-option label="文件上传" value="fileUpload" />
             <el-option label="富文本" value="editor" />
           </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column label="单位" prop="unit" align="center">
+        <template #default="{ row }">
+          <el-input v-model.trim="row.unit" placeholder="单位"></el-input>
         </template>
       </el-table-column>
       <el-table-column label="字典标识" prop="dict" align="center">

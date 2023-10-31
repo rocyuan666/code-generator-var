@@ -51,11 +51,13 @@ exportApi: '/api/tableName/export',
 listApi: '/api/tableName/list',
 detailApi: '/api/tableName/detail',
 subTable: '',
-name: 'targetTableName',
+subTableFieldConfig: {},
+_sub: {},
+name: 'target table name',
 comment: 'table comment',
-field: [
+fieldList: [
   {
-    field: 'fieldName',
+    name: 'field name',
     key: 'PRI',
     label: 'field comment',
     addOrEdit: true,
@@ -131,7 +133,14 @@ fn: {
 
 ### `subTable`
 `type: String`  
-子表名称，可以不选择
+子表名称，可以不选择 不选为空
+
+### `subTableFieldConfig`
+`type: TableFieldConfig`  
+如果 `subTable` 有子表 则 `subTableFieldConfig` 中有子表配置的所有选项，选项与主表相同（注意：已经是子表的表，不会处理子表的子表！禁止套娃，子表的子表...）
+
+### `_sub`
+`subTableFieldConfig` 的别名，简短的名字方便模板使用
 
 ### `name`
 `type: String`  
@@ -141,43 +150,72 @@ fn: {
 `type: String`  
 表注释
 
-### `field`
-`type: Array<FieldItem>`  
+### `fieldList`
+`type: Array<FieldConfigItem>`  
 字段配置数据
 
-#### `FieldItem.field`
+#### `FieldConfigItem.name`
 `type: string`  
 字段名
 
-#### `FieldItem.key`
+#### `FieldConfigItem.key`
 `type: string`  
 字段是主键时key为：`PRI`
 
-#### `FieldItem.label`
+#### `FieldConfigItem.label`
 `type: string`  
 页面中显示的字段label
 
-#### `FieldItem.addOrEdit`
+#### `FieldConfigItem.addOrEdit`
 `type: Boolean`  
 是否可以添加编辑
 
-#### `FieldItem.list`
+#### `FieldConfigItem.list`
 `type: Boolean`  
 是否在列表中显示
 
-#### `FieldItem.query`
+#### `FieldConfigItem.query`
 `type: String`  
-查询类型，可以不选择
+查询类型，可以不选择，不选为空
 
-#### `FieldItem.required`
+| 值 | 意思 |
+| --- | --- |
+| EQ | = 等值 |
+| NE | != 不等 |
+| GT | > 大于 |
+| GTE | >= 大于等于 |
+| LT | < 小于 |
+|LTE | <= 小于等于 |
+| LIKE | LIKE 模糊 |
+| BETWEEN | BETWEEN 范围查询（默认模板中只在 `FieldConfigItem.display` 为： `date` 、`datetime` 生效） |
+
+#### `FieldConfigItem.required`
 `type: Boolean`  
 是否必填
 
-#### `FieldItem.display`
+#### `FieldConfigItem.display`
 `type: String`  
 显示的表单类型
 
-#### `FieldItem.dict`
+| 值 | 意思 |
+| --- | --- |
+| input | 文本框 |
+| inputNumber | 数字框 |
+| textarea | 文本域 |
+| select | 下拉框 |
+| radio | 单选框 |
+| checkbox | 复选框 |
+| date | 日期 |
+| datetime | 日期时间 |
+| imageUpload | 图片上传 |
+| fileUpload | 文件上传 |
+| editor | 富文本 |
+
+#### `FieldConfigItem.unit`
+`type: String`  
+单位，无单位则为空（默认模板中只在 `FieldConfigItem.display` 为： `input` 、`inputNumber` 生效）
+
+#### `FieldConfigItem.dict`
 `type: String`  
 字典类型（标识）
 

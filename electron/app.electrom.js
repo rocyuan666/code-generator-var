@@ -14,6 +14,7 @@ function createWindow() {
     // ...mainWindowState,
     title: cfg.app.name,
     icon: cfg.appIcon,
+    show: false,
     webPreferences: {
       backgroundThrottling: false, // 设置应用在后台正常运行
       // nodeIntegration: true, // 设置能在页面使用nodejs的API
@@ -23,6 +24,7 @@ function createWindow() {
   })
 
   win.maximize()
+  win.show()
   win.removeMenu()
 
   if (cfg.env == 'production') {

@@ -74,9 +74,11 @@ const useGeneratorStore = defineStore('generator', {
           listApi: `/api/${tableName}/list`,
           detailApi: `/api/${tableName}/detail`,
           subTable: '',
+          subTableFieldConfig: {},
+          _sub: {},
           name: item.name,
           comment: `${item.comment}`,
-          field: [],
+          fieldList: [],
         }
         const data = await window.electronApi.getFields(mysqlStore.form.database, item.name)
         const fieldInfoList = data.map((item) => ({
@@ -85,8 +87,8 @@ const useGeneratorStore = defineStore('generator', {
           key: item.COLUMN_KEY, // PRI: 主键
         }))
         fieldInfoList.forEach((fieldItem) => {
-          this.tableFieldConfig[item.name].field.push({
-            field: snakeFormatHump(fieldItem.name),
+          this.tableFieldConfig[item.name].fieldList.push({
+            name: snakeFormatHump(fieldItem.name),
             key: fieldItem.key, // PRI: 主键
             label: fieldItem.comment,
             addOrEdit: true,
@@ -94,6 +96,7 @@ const useGeneratorStore = defineStore('generator', {
             query: '',
             required: false,
             display: 'input',
+            unit: '',
             dict: '',
           })
         })

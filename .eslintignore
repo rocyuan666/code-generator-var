@@ -3,3 +3,4 @@ src/common/utils.js
 public
 dist
 node_modules
+electron/ejsTemplate

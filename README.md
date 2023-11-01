@@ -65,6 +65,7 @@ fieldList: [
     query: '',
     required: false,
     display: 'input',
+    unit: '',
     dict: '',
   },
   ...

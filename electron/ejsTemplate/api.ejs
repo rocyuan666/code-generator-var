@@ -6,11 +6,11 @@ import request from '@/utils/request'
  * @returns
  */
 export function list<%= fn.snakeFormatHump(name, true) %>(data) {
-    return request({
-        url: '<%= listApi %>',
-        method: 'GET',
-        params: data,
-    })
+  return request({
+    url: '<%= listApi %>',
+    method: 'GET',
+    params: data,
+  })
 }
 
 /**
@@ -18,64 +18,70 @@ export function list<%= fn.snakeFormatHump(name, true) %>(data) {
  * @param {Number} id
  * @returns
  */
-export function detail<%= fn.snakeFormatHump(name, true) %>(id) {
-    return request({
-        url: '<%= detailApi %>',
-        method: 'GET',
-        params: {
-            id,
-        }
-    })
+export function detail<%= fn.snakeFormatHump(name, true) %>(data) {
+  return request({
+    url: '<%= detailApi %>',
+    method: 'GET',
+    params: data
+  })
 }
 
+<%_ if (hasAdd) { _%>
 /**
  * 新增 <%= comment %>
  * @param {Object} data
  * @returns
  */
 export function add<%= fn.snakeFormatHump(name, true) %>(data) {
-    return request({
-        url: '<%= addApi %>',
-        method: 'POST',
-        data,
-    })
+  return request({
+    url: '<%= addApi %>',
+    method: 'POST',
+    data,
+  })
 }
+<%_ } _%>
 
+<%_ if (hasEdit) { _%>
 /**
  * 修改 <%= comment %>
  * @param {Object} data
  * @returns
  */
 export function edit<%= fn.snakeFormatHump(name, true) %>(data) {
-    return request({
-        url: '<%= editApi %>',
-        method: 'PUT',
-        data,
-    })
+  return request({
+    url: '<%= editApi %>',
+    method: 'PUT',
+    data,
+  })
 }
+<%_ } _%>
 
+<%_ if (hasDel) { _%>
 /**
  * 删除 <%= comment %>
  * @param {{ids: Number | Number[]}} data
  * @returns
  */
 export function del<%= fn.snakeFormatHump(name, true) %>(data) {
-    return request({
-        url: '<%= delApi %>',
-        method: 'DELETE',
-        params: data,
-    })
+  return request({
+    url: '<%= delApi %>',
+    method: 'DELETE',
+    params: data,
+  })
 }
+<%_ } _%>
 
+<%_ if (hasExport) { _%>
 /**
 * 导出 <%= comment %> 列表
 * @param {Object} data
 * @returns
 */
 export function export<%= fn.snakeFormatHump(name, true) %>(data) {
-    return request({
-        url: '<%= exportApi %>',
-        method: 'GET',
-        params: data,
-    })
+  return request({
+    url: '<%= exportApi %>',
+    method: 'GET',
+    params: data,
+  })
 }
+<%_ } _%>

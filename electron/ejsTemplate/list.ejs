@@ -5,6 +5,8 @@ const _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
 const _uniDictList = [...new Set(fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
 // 本表是否有配置 搜索 的字段
 const _hasQuery = fieldList.some((fieldItem) => fieldItem.query != '')
+// 主键字段数据
+const pkField =  fieldList.find((item) => item.key === 'PRI') || {}
 _%>
 <template>
   <div class="app-container">
@@ -308,7 +310,6 @@ function handleEdit(row) {
  * 删除按钮操作
  */
 function handleDelete(row) {
-  <%_ const pkField =  fieldList.find((item) => item.key === 'PRI') || {} _%>
   const _ids = row.<%= pkField.name %> || selectTableData.value.map((item) => item.<%= pkField.name %>)
   proxy.$modal
     .confirm('确认删除<%= pkField.label %>为' + _ids + '的数据项？')

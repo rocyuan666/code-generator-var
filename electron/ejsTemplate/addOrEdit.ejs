@@ -3,6 +3,8 @@
 const _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
 // 本表 配置的字典标识数组（去重过的）
 const _uniDictList = [...new Set(fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
+// 主键字段数据
+const pkField =  fieldList.find((item) => item.key === 'PRI') || {}
 _%>
 <template>
   <el-dialog :title="title" v-model="open" width="1000px" :close-on-click-modal="false" append-to-body>
@@ -200,7 +202,7 @@ function submitForm() {
   proxy.$refs['addOrEditFormRef'].validate((valid) => {
     if (valid) {
       const _form = cloneDeep(form.value)
-      if (!_form.<%= pk %>) {
+      if (!_form.<%= pkField.name %>) {
         add<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
           proxy.$modal.msgSuccess('添加成功')
           open.value = false

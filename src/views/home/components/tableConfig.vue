@@ -146,7 +146,7 @@
     </el-form>
     <el-divider>字段设置</el-divider>
     <el-alert
-      description="本表字段功能配置"
+      description="本表字段功能配置，红颜色为主键字段"
       type="warning"
       show-icon
       :closable="false"
@@ -156,7 +156,11 @@
       <el-table-column label="序号" type="index" align="center" width="80"></el-table-column>
       <el-table-column label="字段名" prop="name" align="center">
         <template #default="{ row }">
-          <el-input v-model.trim="row.name" placeholder="字段名"></el-input>
+          <el-input
+            :class="{ red: row.key === 'PRI' }"
+            v-model.trim="row.name"
+            placeholder="字段名"
+          ></el-input>
         </template>
       </el-table-column>
       <el-table-column label="标签名" prop="label" align="center">
@@ -164,12 +168,12 @@
           <el-input v-model.trim="row.label" placeholder="标签名"></el-input>
         </template>
       </el-table-column>
-      <el-table-column label="添加编辑" prop="addOrEdit" align="center">
+      <el-table-column label="添加编辑显示" prop="addOrEdit" align="center">
         <template #default="{ row }">
           <el-switch v-model="row.addOrEdit" />
         </template>
       </el-table-column>
-      <el-table-column label="列表" prop="list" align="center">
+      <el-table-column label="列表显示" prop="list" align="center">
         <template #default="{ row }">
           <el-switch v-model="row.list" />
         </template>
@@ -261,5 +265,8 @@ defineExpose({
   .el-button {
     margin: 0 18px;
   }
+}
+.red :deep(.el-input__inner) {
+  color: #f00 !important;
 }
 </style>

@@ -177,10 +177,14 @@ function genCode(event, tableNameList = [], genJsonData = {}) {
         await renderEjsFile(genConfig.apiEjsFilePath, `api/${snakeFormatHump(tableName)}.js`, {
           ...tableFieldConfig[tableName],
           fn: { snakeFormatHump },
+          selectTableName: selectTableNameList,
+          all: tableFieldConfig,
         })
         await renderEjsFile(genConfig.routerEjsFilePath, 'router/genRouters.js', {
           ...tableFieldConfig[tableName],
           fn: { snakeFormatHump },
+          selectTableName: selectTableNameList,
+          all: tableFieldConfig,
         })
         await renderEjsFile(
           genConfig.listEjsFilePath,
@@ -188,6 +192,8 @@ function genCode(event, tableNameList = [], genJsonData = {}) {
           {
             ...tableFieldConfig[tableName],
             fn: { snakeFormatHump },
+            selectTableName: selectTableNameList,
+            all: tableFieldConfig,
           }
         )
         await renderEjsFile(
@@ -196,6 +202,8 @@ function genCode(event, tableNameList = [], genJsonData = {}) {
           {
             ...tableFieldConfig[tableName],
             fn: { snakeFormatHump },
+            selectTableName: selectTableNameList,
+            all: tableFieldConfig,
           }
         )
       }

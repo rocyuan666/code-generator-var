@@ -48,6 +48,7 @@ addApi: '/api/tableName/add',
 editApi: '/api/tableName/edit',
 delApi: '/api/tableName/del',
 exportApi: '/api/tableName/export',
+listPermisstion: 'TableName.list'
 listApi: '/api/tableName/list',
 detailApi: '/api/tableName/detail',
 subTable: '',
@@ -73,6 +74,8 @@ fieldList: [
 fn: {
   snakeFormatHump: (name: String, isBig: Boolean = false) => String
 }
+selectTableName: [],
+all: {}
 ```
 ## 数据说明
 
@@ -123,6 +126,10 @@ fn: {
 ### `exportApi`
 `type: String`  
 导出api地址
+
+### `listPermisstion`
+`type: String`  
+列表权限标识
 
 ### `listApi`
 `type: String`  
@@ -229,3 +236,12 @@ fn: {
 蛇形命名转换驼峰命名  
 fn.functioName("user_name")  ->  userName  
 fn.functioName("user_name", true)  ->  UserName
+
+### `selectTableName`
+`type: Array<String>`  
+选中的表名列表
+
+### `all`
+`type: Object<TableFieldConfig>`  
+所有表的配置对象（ `TableFieldConfig` 中有以上全部属性）
+

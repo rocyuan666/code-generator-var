@@ -42,9 +42,10 @@ app.whenReady().then(() => {
   createWindow()
   initEjsTemplate()
 
-  const icon = cfg.appIcon
-  const tray = new Tray(icon)
-  tray.setToolTip(cfg.app.name)
+  // 托盘
+  // const icon = cfg.appIcon
+  // const tray = new Tray(icon)
+  // tray.setToolTip(cfg.app.name)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

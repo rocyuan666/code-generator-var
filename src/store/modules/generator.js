@@ -71,6 +71,7 @@ const useGeneratorStore = defineStore('generator', {
           editApi: `/api/${tableName}/edit`,
           delApi: `/api/${tableName}/del`,
           exportApi: `/api/${tableName}/export`,
+          listPermisstion: `${TableName}.list`,
           listApi: `/api/${tableName}/list`,
           detailApi: `/api/${tableName}/detail`,
           subTable: '',

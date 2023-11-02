@@ -1,13 +1,257 @@
+<%_
+// 本表是否有配置 字典数据 的字段
+const _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
+// 本表 配置的字典标识数组（去重过的）
+const _uniDictList = [...new Set(fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
+_%>
 <template>
-    <div class="app-container">
-        <p><%= name %></p>
-        <p><%= fn.snakeFormatHump(name) %></p>
-        <p><%= comment %></p>
-    </div>
+  <el-dialog :title="title" v-model="open" width="1000px" :close-on-click-modal="false" append-to-body>
+    <el-form ref="addOrEditFormRef" :model="form" :rules="rules" label-width="auto">
+      <%_ for (const field of fieldList) { _%>
+      <%_ if (field.addOrEdit) { _%>
+      <%_ // 已配置添加编辑显示 _%>
+      <el-form-item label="<%= field.label %>" prop="<%= field.name %>">
+        <%_ // 判断组件类型 _%>
+        <%_ if (field.display === 'input') { _%>
+        <%_ // 文本框 _%>
+        <%_ if (field.unit) { _%>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>">
+          <template #append><%= field.unit %></template>
+        </el-input>
+        <%_ } else { _%>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>"></el-input>
+        <%_ } _%>
+        <%_ } else if (field.display === 'inputNumber') { _%>
+        <%_ // 数字框 _%>
+        <%_ if (field.unit) { _%>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>" type="number">
+          <template #append><%= field.unit %></template>
+        </el-input>
+        <%_ } else { _%>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>" type="number"></el-input>
+        <%_ } _%>
+        <%_ } else if (field.display === 'textarea') { _%>
+        <%_ // 文本域 _%>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>" type="textarea"></el-input>
+        <%_ } else if (field.display === 'select') { _%>
+        <%_ // 下拉框 _%>
+        <el-select v-model="form.<%= field.name %>" placeholder="请选择<%= field.name %>" clearable>
+          <%_ if (field.dict) { _%>
+          <el-option v-for="dict in <%= field.dict %>" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
+          <%_ } else { _%>
+          <el-option label="选择字典生成或手动编写数据" value="1"></el-option>
+          <%_ } _%>
+        </el-select>
+        <%_ } else if (field.display === 'radio') { _%>
+        <%_ // 单选框 _%>
+        <el-radio-group v-model="form.<%= field.name %>">
+          <%_ if (field.dict) { _%>
+          <el-radio v-for="dict in <%= field.dict %>" :key="dict.value" :label="dict.value">{{ dict.label }}</el-radio>
+          <%_ } else { _%>
+          <el-radio label="1">选择字典生成或手动编写数据</el-radio>
+          <%_ } _%>
+        </el-radio-group>
+        <%_ } else if (field.display === 'checkbox') { _%>
+        <%_ // 复选框 _%>
+        <el-checkbox-group v-model="form.<%= field.name %>">
+          <%_ if (field.dict) { _%>
+          <el-checkbox v-for="dict in <%= field.dict %>" :key="dict.value" :label="dict.value">{{ dict.label }}</el-checkbox>
+          <%_ } else { _%>
+          <el-checkbox label="1">选择字典生成或手动编写数据</el-checkbox>
+          <%_ } _%>
+        </el-checkbox-group>
+        <%_ } else if (field.display === 'date') { _%>
+        <%_ // 日期 _%>
+        <el-date-picker v-model="form.<%= field.name %>" type="date" value-format="YYYY-MM-DD" placeholder="请选择<%= field.label %>"></el-date-picker>
+        <%_ } else if (field.display === 'datetime') { _%>
+        <%_ // 日期时间 _%>
+        <el-date-picker v-model="form.<%= field.name %>" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择<%= field.label %>"></el-date-picker>
+        <%_ } else if (field.display === 'imageUpload') { _%>
+        <%_ // 图片上传 _%>
+        <image-upload v-model="form.<%= field.name %>" :limit="1"></image-upload>
+        <%_ } else if (field.display === 'fileUpload') { _%>
+        <%_ // 文件上传 _%>
+        <file-upload v-model="form.<%= field.name %>" :limit="1"></file-upload>
+        <%_ } else if (field.display === 'editor') { _%>
+        <%_ // 富文本 _%>
+        <editor v-model="form.<%= field.name %>" :min-height="200"></editor>
+        <%_ } else { %>
+        <%_ // 其他 _%>
+        <%_ } _%>
+      </el-form-item>
+      <%_ } _%>
+      <%_ } _%>
+      <%_ if (subTable) { _%>
+      <!-- 子表编辑 -->
+      <el-form-item label="<%= _sub.comment %>" prop="subTableData">
+        <el-table :data="subTableData" empty-text="暂无数据，点击下方+号填写信息~">
+          <%_ for (const subField of _sub.fieldList) { _%>
+          <%_ if (subField.addOrEdit) { _%>
+          <%_ const label = subField.unit ? `${subField.label}（${subField.unit}）` : subField.label _%>
+          <el-table-column label="<%= label %>" align="center" prop="<%= subField.name %>">
+            <%_ if (subField.required) { _%>
+            <template #header> <span class="roc-require"></span><%= subTableLabel %> </template>
+            <%_ } _%>
+            <template #default="{ row }">
+              <%_ if (subField.display === 'input') { _%>
+              <%_ // 文本框 _%>
+              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.name %>"></el-input>
+              <%_ } else if (subField.display === 'inputNumber') { _%>
+              <%_ // 数字框 _%>
+              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.name %>" type="number"></el-input>
+              <%_ } else if (subField.display === 'textarea') { _%>
+              <%_ // 文本域 _%>
+              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.name %>" type="textarea"></el-input>
+              <%_ } else if (subField.display === 'select') { _%>
+              <%_ // 下拉框 _%>
+              <el-select v-model="row.<%= subField.name %>" placeholder="请选择<%= subField.name %>" clearable>
+                <%_ if (subField.dict) { _%>
+                <el-option v-for="dict in <%= subField.dict %>" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
+                <%_ } else { _%>
+                <el-option label="选择字典生成或手动编写数据" value="1"></el-option>
+                <%_ } _%>
+              </el-select>
+              <%_ } else if (subField.display === 'radio') { _%>
+              <%_ // 单选框 _%>
+              <el-radio-group v-model="row.<%= subField.name %>">
+                <%_ if (subField.dict) { _%>
+                <el-radio v-for="dict in <%= subField.dict %>" :key="dict.value" :label="dict.value">{{ dict.label }}</el-radio>
+                <%_ } else { _%>
+                <el-radio label="1">选择字典生成或手动编写数据</el-radio>
+                <%_ } _%>
+              </el-radio-group>
+              <%_ } else if (subField.display === 'checkbox') { _%>
+              <%_ // 复选框 _%>
+              <el-checkbox-group v-model="row.<%= subField.name %>">
+                <%_ if (subField.dict) { _%>
+                <el-checkbox v-for="dict in <%= subField.dict %>" :key="dict.value" :label="dict.value">{{ dict.label }}</el-checkbox>
+                <%_ } else { _%>
+                <el-checkbox label="1">选择字典生成或手动编写数据</el-checkbox>
+                <%_ } _%>
+              </el-checkbox-group>
+              <%_ } else if (subField.display === 'date') { _%>
+              <%_ // 日期 _%>
+              <el-date-picker v-model="row.<%= subField.name %>" type="date" value-format="YYYY-MM-DD" placeholder="请选择<%= subField.label %>"></el-date-picker>
+              <%_ } else if (subField.display === 'datetime') { _%>
+              <%_ // 日期时间 _%>
+              <el-date-picker v-model="row.<%= subField.name %>" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择<%= subField.label %>"></el-date-picker>
+              <%_ } else if (subField.display === 'imageUpload') { _%>
+              <%_ // 图片上传 _%>
+              <image-upload v-model="row.<%= subField.name %>" :limit="1"></image-upload>
+              <%_ } else if (subField.display === 'fileUpload') { _%>
+              <%_ // 文件上传 _%>
+              <file-upload v-model="row.<%= subField.name %>" :limit="1"></file-upload>
+              <%_ } else if (subField.display === 'editor') { _%>
+              <%_ // 富文本 _%>
+              <editor v-model="row.<%= subField.name %>" :min-height="200"></editor>
+              <%_ } else { %>
+              <%_ // 其他 _%>
+              <%_ } _%>
+            </template>
+          </el-table-column>
+          <%_ } _%>
+          <%_ } _%>
+        </el-table>
+      </el-form-item>
+      <%_ } _%>
+    </el-form>
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button @click="handleClose" v-autoBlur>取 消</el-button>
+        <el-button type="primary" @click="submitForm" v-autoBlur>确 定</el-button>
+      </div>
+    </template>
+  </el-dialog>
 </template>
 
-<script setup name="<%= fn.snakeFormatHump(name) %>AddOrEdit">
-//
+<script setup name="<%= fn.snakeFormatHump(name, true) %>AddOrEdit">
+import { ref, getCurrentInstance, inject } from 'vue'
+import { cloneDeep } from 'lodash-es'
+import { add<%= fn.snakeFormatHump(name, true) %>, edit<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>.js'
+
+const { proxy } = getCurrentInstance()
+<%_ if (_hasDict) { _%>
+// 注入字典数据
+<%_ for (const dict of _uniDictList) { _%>
+const <%= dict %> = inject('<%= dict %>', () => [])
+<%_ } _%>
+<%_ } _%>
+
+const form = ref({
+<%_ for (const field of fieldList) { _%>
+  <%_ if (field.display === 'checkbox') { _%>
+  <%= field.name %>: [],
+  <%_ } else { _%>
+  <%= field.name %>: null,
+  <%_ } _%>
+<%_ } _%>
+})
+const rules = ref({
+<%_ for (const field of fieldList) { _%>
+  <%_ if (field.required) { _%>
+  <%= field.name %>: [{ required: true, message: '<%= field.label %>不能为空', trigger: 'blur' }],
+  <%_ } _%>
+<%_ } _%>
+})
+/**
+ * 提交表单
+ */
+function submitForm() {
+  proxy.$refs['addOrEditFormRef'].validate((valid) => {
+    if (valid) {
+      const _form = cloneDeep(form.value)
+      if (!_form.<%= pk %>) {
+        add<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
+          proxy.$modal.msgSuccess('添加成功')
+          open.value = false
+          emits('updateList')
+        })
+      } else {
+        edit<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
+          proxy.$modal.msgSuccess('修改成功')
+          open.value = false
+          emits('updateList')
+        })
+      }
+    }
+  })
+}
+
+/**
+ * 重置表单
+ */
+function reset() {
+  proxy.resetForm('addOrEditFormRef')
+}
+
+const open = ref(false)
+const title = ref('')
+/**
+ * 打开添加对话框
+ */
+function handleAdd() {
+  reset()
+  open.value = true
+  title.value = '添加'
+}
+/**
+ * 打开编辑对话框
+ */
+function handleEdit(row) {
+  reset()
+  form.value = row
+  open.value = true
+  title.value = '修改'
+}
+
+/**
+ * 关闭对话框
+ */
+function handleClose() {
+  open.value = false
+}
+
+defineExpose({ handleAdd, handleEdit })
 </script>
 
 <style lang="scss" scoped></style>

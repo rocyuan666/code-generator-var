@@ -1,3 +1,41 @@
-<%= name %>
-<%= fn.snakeFormatHump(name) %>
-<%= comment %>
+/**
+ * 本文件的路由信息为代码生成器（code-generator-var）生成的示例路由，请灵活使用!!!
+ */
+export const genRouters = [
+  {
+    path: '/manage',
+    name: 'Manage',
+    redirect: 'noRedirect',
+    hidden: false,
+    component: () => import('@/layout'),
+    alwaysShow: true,
+    permissions: [
+      <%_ for (const tableName of selectTableName) { _%>
+        '<%= all[tableName].listPermisstion %>',
+      <%_ } _%>
+    ],
+    meta: {
+        icon: 'Grid',
+        link: null,
+        noCache: false,
+        title: '业务管理',
+    },
+    children: [
+      <%_ for (const tableName of selectTableName) { _%>
+        {
+          path: '<%= fn.snakeFormatHump(tableName) %>',
+          name: '<%= fn.snakeFormatHump(tableName, true) %>',
+          hidden: false,
+          component: () => import('@/views/<%= fn.snakeFormatHump(tableName) %>'),
+          permissions: ['<%= all[tableName].listPermisstion %>'],
+          meta: {
+            icon: '',
+            link: null,
+            noCache: false,
+            title: '<%= all[tableName].comment != "" ? all[tableName].comment : fn.snakeFormatHump(tableName, true) %>',
+          },
+        },
+      <%_ } _%>
+    ],
+  },
+]

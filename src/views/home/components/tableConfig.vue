@@ -95,6 +95,14 @@
           </el-form-item>
         </el-col>
         <el-col :span="6">
+          <el-form-item label="列表权限" prop="listPermisstion">
+            <el-input
+              v-model.trim="generatorStore.tableFieldConfig[tableName].listPermisstion"
+              placeholder="列表权限标识"
+            ></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
           <el-form-item label="列表接口" prop="listApi">
             <el-input
               v-model.trim="generatorStore.tableFieldConfig[tableName].listApi"

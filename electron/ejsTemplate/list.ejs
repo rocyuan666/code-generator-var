@@ -274,11 +274,15 @@ const total = ref(0)
 function getList() {
   loading.value = true
   const _queryParams = cloneDeep(queryParams.value)
-  list<%= fn.snakeFormatHump(name, true) %>(_queryParams).then((res) => {
-    tableData.value = res.data.rows
-    total.value = res.data.total
-    loading.value = false
-  })
+  list<%= fn.snakeFormatHump(name, true) %>(_queryParams)
+    .then((res) => {
+      tableData.value = res.data.rows
+      total.value = res.data.total
+      loading.value = false
+    })
+    .catch(() => {
+      loading.value = false
+    })
 }
 
 const selectTableData = ref([])

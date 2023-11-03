@@ -96,17 +96,17 @@ _%>
     <!-- 操作按钮 -->
     <el-row :gutter="10" class="mb8">
       <%_ if (hasAdd) { _%>
-      <el-col :span="1.5" v-hasPermi="['<%= addPermisstion %>']">
+      <el-col :span="1.5" v-hasPermit="['<%= addPermisstion %>']">
         <el-button type="primary" plain icon="Plus" @click="handleAdd" v-autoBlur>新增</el-button>
       </el-col>
       <%_ } _%>
       <%_ if (hasDel) { _%>
-      <el-col :span="1.5" v-hasPermi="['<%= delPermisstion %>']">
+      <el-col :span="1.5" v-hasPermit="['<%= delPermisstion %>']">
         <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete" v-autoBlur>删除</el-button>
       </el-col>
       <%_ } _%>
       <%_ if (hasExport) { _%>
-      <el-col :span="1.5" v-hasPermi="['<%= exportPermisstion %>']">
+      <el-col :span="1.5" v-hasPermit="['<%= exportPermisstion %>']">
         <el-button type="success" plain icon="Download" @click="handleExport" :loading="btnExportLoading" v-autoBlur>导出</el-button>
       </el-col>
       <%_ } _%>
@@ -187,13 +187,13 @@ _%>
       <%_ } _%>
       <%_ // 是否有 编辑 删除 功能 _%>
       <%_ if (hasEdit || hasDel) { _%>
-      <el-table-column label="操作" align="center" width="236" v-hasPermi="['<%= editPermisstion %>', '<%= delPermisstion %>']">
+      <el-table-column label="操作" align="center" width="236" v-hasPermit="['<%= editPermisstion %>', '<%= delPermisstion %>']">
         <template #default="{ row }">
           <%_ if (hasEdit) { _%>
-          <el-button link type="primary" @click="handleEdit(row)" v-hasPermi="['<%= editPermisstion %>']" v-autoBlur>修改</el-button>
+          <el-button link type="primary" @click="handleEdit(row)" v-hasPermit="['<%= editPermisstion %>']" v-autoBlur>修改</el-button>
           <%_ } _%>
           <%_ if (hasDel) { _%>
-          <el-button link type="danger" @click="handleDelete(row)" v-hasPermi="['<%= delPermisstion %>']" v-autoBlur>删除</el-button>
+          <el-button link type="danger" @click="handleDelete(row)" v-hasPermit="['<%= delPermisstion %>']" v-autoBlur>删除</el-button>
           <%_ } _%>
         </template>
       </el-table-column>
@@ -209,9 +209,9 @@ _%>
 <script setup name="<%= fn.snakeFormatHump(name, true) %>">
 import { ref, getCurrentInstance, provide, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
-import { <% if (_hasDict) { %>labelValueToKeyValue, <% } %>exportFormatJson } from '@/utils/roc.js'
-import { exportJsonToExcel } from '@/utils/excel'
-import { list<%= fn.snakeFormatHump(name, true) %>, del<%= fn.snakeFormatHump(name, true) %>, export<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>.js'
+import { labelValueToKeyValue } from '@/utils/roc'
+import { exportJsonToExcel, exportFormatJson } from '@/utils/excel'
+import { list<%= fn.snakeFormatHump(name, true) %>, del<%= fn.snakeFormatHump(name, true) %>, export<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
 import AddOrEdit from './addOrEdit.vue'
 
 const { proxy } = getCurrentInstance()

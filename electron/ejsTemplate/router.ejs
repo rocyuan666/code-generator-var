@@ -15,7 +15,7 @@ export const genRouters = [
       <%_ } _%>
     ],
     meta: {
-        icon: 'Grid',
+        icon: 'clipboard',
         link: null,
         noCache: false,
         title: '业务管理',
@@ -29,7 +29,7 @@ export const genRouters = [
           component: () => import('@/views/<%= fn.snakeFormatHump(tableName) %>'),
           permissions: ['<%= all[tableName].listPermisstion %>'],
           meta: {
-            icon: '',
+            icon: 'documentation',
             link: null,
             noCache: false,
             title: '<%= all[tableName].comment != "" ? all[tableName].comment : fn.snakeFormatHump(tableName, true) %>',

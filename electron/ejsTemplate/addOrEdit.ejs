@@ -169,7 +169,7 @@ _%>
 <script setup name="<%= fn.snakeFormatHump(name, true) %>AddOrEdit">
 import { ref, getCurrentInstance, inject } from 'vue'
 import { cloneDeep } from 'lodash-es'
-import { add<%= fn.snakeFormatHump(name, true) %>, edit<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>.js'
+import { add<%= fn.snakeFormatHump(name, true) %>, edit<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
 
 const { proxy } = getCurrentInstance()
 <%_ if (_hasDict) { _%>

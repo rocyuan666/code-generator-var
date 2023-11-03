@@ -35,7 +35,7 @@ module.exports = defineConfig({
   },
   chainWebpack: (config) => {
     config.plugin('html').tap((args) => {
-      args[0].title = 'VAR代码生成器'
+      args[0].title = 'code-generator-VAR'
       return args
     })
     if (process.env.NODE_ENV === 'production') {

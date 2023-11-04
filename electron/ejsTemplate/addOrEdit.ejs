@@ -178,6 +178,7 @@ import { cloneDeep } from 'lodash-es'
 import { add<%= fn.snakeFormatHump(name, true) %>, edit<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
 
 const { proxy } = getCurrentInstance()
+const emit = defineEmits(['updateList'])
 <%_ if (_hasDict) { _%>
 // 注入字典数据
 <%_ for (const dict of _uniDictList) { _%>
@@ -220,13 +221,13 @@ function submitForm() {
         add<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
           proxy.$modal.msgSuccess('添加成功')
           open.value = false
-          emits('updateList')
+          emit('updateList')
         })
       } else {
         edit<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
           proxy.$modal.msgSuccess('修改成功')
           open.value = false
-          emits('updateList')
+          emit('updateList')
         })
       }
     }
@@ -286,7 +287,7 @@ const subTableDataItem = {
  * 添加子表数据
  */
 function handleSubTableAdd() {
-    form.value.subTableData.push(cloneDeep(subTableDataItem))
+  form.value.subTableData.push(cloneDeep(subTableDataItem))
 }
 
 /**

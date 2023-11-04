@@ -26,7 +26,8 @@ if (osType == 'Windows_NT') {
   makers.push(
     {
       /**
-       * 构建msi安装包，电脑需要安装 wixtool
+       * 构建msi安装包，电脑需要安装 wixtool 并配置环境变量
+       * 如：C:\Program Files (x86)\WiX Toolset v3.11\bin
        * /wixtool/wix311.exe
        */
       name: '@electron-forge/maker-wix',

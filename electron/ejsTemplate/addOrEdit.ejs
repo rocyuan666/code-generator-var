@@ -17,27 +17,27 @@ _%>
         <%_ if (field.display === 'input') { _%>
         <%_ // 文本框 _%>
         <%_ if (field.unit) { _%>
-        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>">
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.label %>">
           <template #append><%= field.unit %></template>
         </el-input>
         <%_ } else { _%>
-        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>"></el-input>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.label %>"></el-input>
         <%_ } _%>
         <%_ } else if (field.display === 'inputNumber') { _%>
         <%_ // 数字框 _%>
         <%_ if (field.unit) { _%>
-        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>" type="number">
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.label %>" type="number">
           <template #append><%= field.unit %></template>
         </el-input>
         <%_ } else { _%>
-        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>" type="number"></el-input>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.label %>" type="number"></el-input>
         <%_ } _%>
         <%_ } else if (field.display === 'textarea') { _%>
         <%_ // 文本域 _%>
-        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.name %>" type="textarea"></el-input>
+        <el-input v-model="form.<%= field.name %>" placeholder="请填写<%= field.label %>" type="textarea"></el-input>
         <%_ } else if (field.display === 'select') { _%>
         <%_ // 下拉框 _%>
-        <el-select v-model="form.<%= field.name %>" placeholder="请选择<%= field.name %>" clearable>
+        <el-select v-model="form.<%= field.name %>" placeholder="请选择<%= field.label %>" clearable>
           <%_ if (field.dict) { _%>
           <el-option v-for="dict in <%= field.dict %>" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
           <%_ } else { _%>
@@ -86,7 +86,7 @@ _%>
       <%_ if (subTable) { _%>
       <!-- 子表编辑 -->
       <el-form-item label="<%= _sub.comment %>" prop="subTableData">
-        <el-table :data="subTableData" empty-text="暂无数据，点击下方+号填写信息~">
+        <el-table :data="form.subTableData" empty-text="暂无数据，点击下方+号填写信息~">
           <%_ for (const subField of _sub.fieldList) { _%>
           <%_ if (subField.addOrEdit) { _%>
           <%_ const label = subField.unit ? `${subField.label}（${subField.unit}）` : subField.label _%>
@@ -97,16 +97,16 @@ _%>
             <template #default="{ row }">
               <%_ if (subField.display === 'input') { _%>
               <%_ // 文本框 _%>
-              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.name %>"></el-input>
+              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.label %>"></el-input>
               <%_ } else if (subField.display === 'inputNumber') { _%>
               <%_ // 数字框 _%>
-              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.name %>" type="number"></el-input>
+              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.label %>" type="number"></el-input>
               <%_ } else if (subField.display === 'textarea') { _%>
               <%_ // 文本域 _%>
-              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.name %>" type="textarea"></el-input>
+              <el-input v-model="row.<%= subField.name %>" placeholder="请填写<%= subField.label %>" type="textarea"></el-input>
               <%_ } else if (subField.display === 'select') { _%>
               <%_ // 下拉框 _%>
-              <el-select v-model="row.<%= subField.name %>" placeholder="请选择<%= subField.name %>" clearable>
+              <el-select v-model="row.<%= subField.name %>" placeholder="请选择<%= subField.label %>" clearable>
                 <%_ if (subField.dict) { _%>
                 <el-option v-for="dict in <%= subField.dict %>" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
                 <%_ } else { _%>
@@ -153,7 +153,13 @@ _%>
           </el-table-column>
           <%_ } _%>
           <%_ } _%>
+          <el-table-column label="操作" align="center" width="150">
+            <template #default="{ $index }">
+              <el-button link type="primary" icon="Delete" @click="handleSubTableDelete($index)" v-autoBlur> 删除 </el-button>
+            </template>
+        </el-table-column>
         </el-table>
+        <el-icon @click="handleSubTableAdd" size="40" color="#909399" style="margin: 0 auto; cursor: pointer; margin-top: 10px"><CirclePlus /></el-icon>
       </el-form-item>
       <%_ } _%>
     </el-form>
@@ -181,17 +187,25 @@ const <%= dict %> = inject('<%= dict %>', () => [])
 
 const form = ref({
 <%_ for (const field of fieldList) { _%>
+  <%_ if (field.addOrEdit) { _%>
   <%_ if (field.display === 'checkbox') { _%>
   <%= field.name %>: [],
   <%_ } else { _%>
   <%= field.name %>: null,
   <%_ } _%>
+  <%_ } _%>
+<%_ } _%>
+<%_ // 是否有子表数据 _%>
+<%_ if (subTable) { _%>
+  subTableData: [],
 <%_ } _%>
 })
 const rules = ref({
 <%_ for (const field of fieldList) { _%>
+  <%_ if (field.addOrEdit) { _%>
   <%_ if (field.required) { _%>
   <%= field.name %>: [{ required: true, message: '<%= field.label %>不能为空', trigger: 'blur' }],
+  <%_ } _%>
   <%_ } _%>
 <%_ } _%>
 })
@@ -238,6 +252,7 @@ function handleAdd() {
 }
 /**
  * 打开编辑对话框
+ * @param {*} row
  */
 function handleEdit(row) {
   reset()
@@ -252,6 +267,36 @@ function handleEdit(row) {
 function handleClose() {
   open.value = false
 }
+<%_ if (subTable) { _%>
+
+<%_ // 子表一行数据 _%>
+const subTableDataItem = {
+  <%_ for (const subField of _sub.fieldList) { _%>
+  <%_ if (subField.addOrEdit) { _%>
+  <%_ if(subField.display === 'checkbox') { _%>
+  <%= subField.name %>: [],
+  <%_ } else { _%>
+  <%= subField.name %>: null,
+  <%_ } _%>
+  <%_ } _%>
+  <%_ } _%>
+}
+
+/**
+ * 添加子表数据
+ */
+function handleSubTableAdd() {
+    form.value.subTableData.push(cloneDeep(subTableDataItem))
+}
+
+/**
+ * 删除子表数据
+ * @param {Number} index
+ */
+function handleSubTableDelete(index) {
+  form.value.subTableData.splice(index, 1)
+}
+<%_ } _%>
 
 defineExpose({ handleAdd, handleEdit })
 </script>

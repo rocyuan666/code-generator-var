@@ -51,6 +51,9 @@
           <el-button link type="primary" icon="Tools" @click="handleTableFieldConfig(row)">
             配置
           </el-button>
+          <el-button link type="success" icon="Download" @click="handleGenCode($event, row.name)">
+            生成代码
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -164,8 +167,8 @@ function handleTableFieldConfig(row) {
 /**
  * 生成代码
  */
-function handleGenCode() {
-  const selectTableNameList = selectData.value.map((item) => item.name)
+function handleGenCode(event, tableName) {
+  const selectTableNameList = tableName ? [tableName] : selectData.value.map((item) => item.name)
   const genJsonData = {
     genConfig: generatorStore.genConfig,
     tableFieldConfig: generatorStore.tableFieldConfig,

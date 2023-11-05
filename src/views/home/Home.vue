@@ -117,11 +117,24 @@ function updateMysqlStatus(status) {
 async function handleGetTables() {
   loading.value = true
   if (mysqlStore.mysqlStatus == enumMysqlStatus['1']) {
-    // 数据库连接成功
-    const data = await window.electronApi.getTables(mysqlStore.form.database)
-    // 记录需要的表数据
-    generatorStore.setTableInfoList(data)
-    proxy.$modal.msgSuccess('获取表信息成功')
+    if (generatorStore.tableInfoList.length) {
+      proxy.$modal
+        .confirm('生成器中已存在表数据，重新获取将丢失已配置数据，请确保已配置数据已经生成了代码！')
+        .then(async () => {
+          // 数据库连接成功
+          const data = await window.electronApi.getTables(mysqlStore.form.database)
+          // 记录需要的表数据
+          generatorStore.setTableInfoList(data)
+          proxy.$modal.msgSuccess('获取表信息成功')
+        })
+        .catch(() => {})
+    } else {
+      // 数据库连接成功
+      const data = await window.electronApi.getTables(mysqlStore.form.database)
+      // 记录需要的表数据
+      generatorStore.setTableInfoList(data)
+      proxy.$modal.msgSuccess('获取表信息成功')
+    }
     loading.value = false
   } else {
     // 数据库连接失败

@@ -202,6 +202,7 @@ function handleGenCodeConfig() {
 .app {
   padding: 0 10px 10px 10px;
   .controller-box {
+    width: 100%;
     background-color: #fff;
     padding: 10px 0;
   }

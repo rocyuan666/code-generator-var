@@ -17,10 +17,7 @@ function initEjsTemplate() {
     // 开发环境复制替换ejs模板
     // 生产环境判断模板是否存在  存在则不进行复制覆盖
     if (cfg.env === 'development') {
-      copyFile('api.ejs')
-      copyFile('router.ejs')
-      copyFile('list.ejs')
-      copyFile('addOrEdit.ejs')
+      copyTemplateFile()
     } else {
       if (ejsFileNames.includes('template.json')) {
         // 处理版本
@@ -29,23 +26,26 @@ function initEjsTemplate() {
         )
         const localTemplateJson = fs.readJSONSync(path.resolve(appEjsDataDir, 'template.json'))
         if (localTemplateJson.version !== appTemplateJson.version) {
-          copyFile('template.json')
-          copyFile('api.ejs')
-          copyFile('router.ejs')
-          copyFile('list.ejs')
-          copyFile('addOrEdit.ejs')
+          copyTemplateFile()
         }
       } else {
-        copyFile('template.json')
-        copyFile('api.ejs')
-        copyFile('router.ejs')
-        copyFile('list.ejs')
-        copyFile('addOrEdit.ejs')
+        copyTemplateFile()
       }
     }
   } catch (error) {
     console.log(error)
   }
+}
+
+/**
+ * 复制模板文件
+ */
+function copyTemplateFile() {
+  copyFile('template.json')
+  copyFile('api.ejs')
+  copyFile('router.ejs')
+  copyFile('list.ejs')
+  copyFile('addOrEdit.ejs')
 }
 
 /**

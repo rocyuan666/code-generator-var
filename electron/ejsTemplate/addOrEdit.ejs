@@ -1,3 +1,4 @@
+<%_ if (hasAdd || hasEdit) { _%>
 <%_
 // 本表是否有配置 字典数据 的字段
 const _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
@@ -175,7 +176,13 @@ _%>
 <script setup name="<%= fn.snakeFormatHump(name, true) %>AddOrEdit">
 import { ref, getCurrentInstance, inject } from 'vue'
 import { cloneDeep } from 'lodash-es'
+<%_ if (hasAdd && hasEdit) { _%>
 import { add<%= fn.snakeFormatHump(name, true) %>, edit<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
+<%_ } else if (hasAdd === true && hasEdit === false) { _%>
+import { add<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
+<%_ } else if (hasAdd === false && hasEdit === true) { _%>
+import { edit<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
+<%_ } _%>
 
 const { proxy } = getCurrentInstance()
 const emit = defineEmits(['updateList'])
@@ -217,6 +224,7 @@ function submitForm() {
   proxy.$refs['addOrEditFormRef'].validate((valid) => {
     if (valid) {
       const _form = cloneDeep(form.value)
+      <%_ if (hasAdd && hasEdit) { _%>
       if (!_form.<%= pkField.name %>) {
         add<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
           proxy.$modal.msgSuccess('添加成功')
@@ -230,6 +238,19 @@ function submitForm() {
           emit('updateList')
         })
       }
+      <%_ } else if (hasAdd === true && hasEdit === false) { _%>
+      add<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
+        proxy.$modal.msgSuccess('添加成功')
+        open.value = false
+        emit('updateList')
+      })
+      <%_ } else if (hasAdd === false && hasEdit === true) { _%>
+      edit<%= fn.snakeFormatHump(name, true) %>(_form).then(() => {
+        proxy.$modal.msgSuccess('修改成功')
+        open.value = false
+        emit('updateList')
+      })
+      <%_ } _%>
     }
   })
 }
@@ -243,6 +264,7 @@ function reset() {
 
 const open = ref(false)
 const title = ref('')
+<%_ if (hasAdd) { _%>
 /**
  * 打开添加对话框
  */
@@ -251,6 +273,8 @@ function handleAdd() {
   open.value = true
   title.value = '添加'
 }
+<%_ } _%>
+<%_ if (hasEdit) { _%>
 /**
  * 打开编辑对话框
  * @param {*} row
@@ -261,6 +285,7 @@ function handleEdit(row) {
   open.value = true
   title.value = '修改'
 }
+<%_ } _%>
 
 /**
  * 关闭对话框
@@ -299,7 +324,18 @@ function handleSubTableDelete(index) {
 }
 <%_ } _%>
 
+<%_ if (hasAdd && hasEdit) { _%>
 defineExpose({ handleAdd, handleEdit })
+<%_ } else if (hasAdd === true && hasEdit === false) { _%>
+defineExpose({ handleAdd })
+<%_ } else if (hasAdd === false && hasEdit === true) { _%>
+defineExpose({ handleEdit })
+<%_ } _%>
 </script>
 
 <style lang="scss" scoped></style>
+<%_ } else { _%>
+<template>
+  <h2>未生成添加编辑功能，请手动删除本文件</h2>
+</template>
+<%_ } _%>

@@ -92,7 +92,6 @@ _%>
       </el-form-item>
     </el-form>
     <%_ } _%>
-    <%_ if (hasAdd || hasDel || hasExport || _hasQuery) { _%>
     <!-- 操作按钮 -->
     <el-row :gutter="10" class="mb8">
       <%_ if (hasAdd) { _%>
@@ -112,7 +111,6 @@ _%>
       <%_ } _%>
       <right-toolbar :search="<%= _hasQuery %>"<% if(_hasQuery) { %> v-model:showSearch="showSearch"<% } %> @queryTable="getList"></right-toolbar>
     </el-row>
-    <%_ } _%>
     <!-- 表格 -->
     <el-table :data="tableData" empty-text="暂无数据~"<% if (hasDel || hasExport) { %> @selection-change="handleSelectionChange"<% } %> v-loading="loading">
       <%_ if (hasDel || hasExport) { _%>
@@ -213,8 +211,10 @@ _%>
 <script setup name="<%= fn.snakeFormatHump(name, true) %>">
 import { ref, getCurrentInstance, provide, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
-<%_ if (hasExport) { _%>
+<%_ if (_hasDict) { _%>
 import { labelValueToKeyValue } from '@/utils/roc'
+<%_ } _%>
+<%_ if (hasExport) { _%>
 import { exportJsonToExcel, exportFormatJson } from '@/utils/excel'
 <%_ } _%>
 import { list<%= fn.snakeFormatHump(name, true) %><% if (hasDel) { %>, del<%= fn.snakeFormatHump(name, true) %><% } %><% if (hasExport) { %>, export<%= fn.snakeFormatHump(name, true) %><% } %> } from '@/api/<%= fn.snakeFormatHump(name) %>'

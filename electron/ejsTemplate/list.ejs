@@ -92,7 +92,7 @@ _%>
       </el-form-item>
     </el-form>
     <%_ } _%>
-    <%_ if (hasAdd || hasDel || hasExport) { _%>
+    <%_ if (hasAdd || hasDel || hasExport || _hasQuery) { _%>
     <!-- 操作按钮 -->
     <el-row :gutter="10" class="mb8">
       <%_ if (hasAdd) { _%>
@@ -110,12 +110,14 @@ _%>
         <el-button type="success" plain icon="Download" @click="handleExport" :loading="btnExportLoading" v-autoBlur>导出</el-button>
       </el-col>
       <%_ } _%>
-      <right-toolbar :search="true" v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
+      <right-toolbar :search="<%= _hasQuery %>"<% if(_hasQuery) { %> v-model:showSearch="showSearch"<% } %> @queryTable="getList"></right-toolbar>
     </el-row>
     <%_ } _%>
     <!-- 表格 -->
-    <el-table :data="tableData" empty-text="暂无数据~" @selection-change="handleSelectionChange" v-loading="loading">
+    <el-table :data="tableData" empty-text="暂无数据~"<% if (hasDel || hasExport) { %> @selection-change="handleSelectionChange"<% } %> v-loading="loading">
+      <%_ if (hasDel || hasExport) { _%>
       <el-table-column type="selection" width="55" align="center" />
+      <%_ } _%>
       <%_ for (const field of fieldList) { _%>
       <%_ // 单位处理 _%>
       <%_ const label = field.unit ? `${field.label}（${field.unit}）` : field.label _%>
@@ -201,18 +203,24 @@ _%>
     </el-table>
     <!-- 分页 -->
     <pagination v-if="total > 0" :total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit" @pagination="getList"></pagination>
+    <%_ if (hasAdd || hasEdit) { _%>
     <!-- 添加 & 编辑 对话框 -->
     <AddOrEdit ref="addOrEditRef" @updateList="getList"></AddOrEdit>
+    <%_ } _%>
   </div>
 </template>
 
 <script setup name="<%= fn.snakeFormatHump(name, true) %>">
 import { ref, getCurrentInstance, provide, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
+<%_ if (hasExport) { _%>
 import { labelValueToKeyValue } from '@/utils/roc'
 import { exportJsonToExcel, exportFormatJson } from '@/utils/excel'
-import { list<%= fn.snakeFormatHump(name, true) %>, del<%= fn.snakeFormatHump(name, true) %>, export<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
+<%_ } _%>
+import { list<%= fn.snakeFormatHump(name, true) %><% if (hasDel) { %>, del<%= fn.snakeFormatHump(name, true) %><% } %><% if (hasExport) { %>, export<%= fn.snakeFormatHump(name, true) %><% } %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
+<%_ if (hasAdd || hasEdit) { _%>
 import AddOrEdit from './addOrEdit.vue'
+<%_ } _%>
 
 const { proxy } = getCurrentInstance()
 <%_
@@ -238,7 +246,9 @@ provide('<%= dict %>', <%= dict %>)
 <%_ } _%>
 <%_ } _%>
 
+<%_ if (_hasQuery) { _%>
 const showSearch = ref(true)
+<%_ } _%>
 const queryParams = ref({
   page: 1,
   limit: 10,
@@ -284,6 +294,7 @@ function getList() {
       loading.value = false
     })
 }
+<%_ if (hasDel || hasExport) { _%>
 
 const selectTableData = ref([])
 const multiple = ref(true)
@@ -294,6 +305,8 @@ function handleSelectionChange(selection) {
   selectTableData.value = selection
   multiple.value = !selection.length
 }
+<%_ } _%>
+<%_ if(hasAdd) { _%>
 
 /**
  * 添加按钮操作
@@ -301,6 +314,8 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   proxy.$refs['addOrEditRef'].handleAdd()
 }
+<%_ } _%>
+<%_ if(hasEdit) { _%>
 
 /**
  * 编辑按钮操作
@@ -309,6 +324,8 @@ function handleEdit(row) {
   const _row = cloneDeep(row)
   proxy.$refs['addOrEditRef'].handleEdit(_row)
 }
+<%_ } _%>
+<%_ if (hasDel) { _%>
 
 /**
  * 删除按钮操作
@@ -326,6 +343,8 @@ function handleDelete(row) {
     })
     .catch(() => {})
 }
+<%_ } _%>
+<%_ if (hasExport) { _%>
 
 const btnExportLoading = ref(false)
 <%_ if (_hasDict) { _%>
@@ -414,6 +433,7 @@ function handleExport() {
   }, `<%= comment %>.xlsx`)
 }
 */
+<%_ } _%>
 
 getList()
 </script>

@@ -22,16 +22,24 @@ function initEjsTemplate() {
       copyFile('list.ejs')
       copyFile('addOrEdit.ejs')
     } else {
-      if (!ejsFileNames.includes('api.ejs')) {
+      if (ejsFileNames.includes('template.json')) {
+        // 处理版本
+        const appTemplateJson = fs.readJSONSync(
+          path.resolve(__dirname, '../ejsTemplate', 'template.json')
+        )
+        const localTemplateJson = fs.readJSONSync(path.resolve(appEjsDataDir, 'template.json'))
+        if (localTemplateJson.version !== appTemplateJson.version) {
+          copyFile('template.json')
+          copyFile('api.ejs')
+          copyFile('router.ejs')
+          copyFile('list.ejs')
+          copyFile('addOrEdit.ejs')
+        }
+      } else {
+        copyFile('template.json')
         copyFile('api.ejs')
-      }
-      if (!ejsFileNames.includes('router.ejs')) {
         copyFile('router.ejs')
-      }
-      if (!ejsFileNames.includes('list.ejs')) {
         copyFile('list.ejs')
-      }
-      if (!ejsFileNames.includes('addOrEdit.ejs')) {
         copyFile('addOrEdit.ejs')
       }
     }

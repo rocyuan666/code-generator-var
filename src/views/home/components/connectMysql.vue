@@ -62,7 +62,7 @@ const rules = ref({
   password: [{ required: true, message: '密码必填', trigger: 'blur' }],
 })
 
-const emits = defineEmits(['updateMysqlStatus'])
+const emit = defineEmits(['updateMysqlStatus'])
 
 /**
  * 提交连接数据库
@@ -74,7 +74,7 @@ function submitForm() {
         .connectMysql(JSON.stringify(mysqlStore.form))
         .then(() => {
           proxy.$modal.msgSuccess('mysql已连接')
-          emits('updateMysqlStatus', enumMysqlStatus['1'])
+          emit('updateMysqlStatus', enumMysqlStatus['1'])
           handleClose()
         })
         .catch((err) => {

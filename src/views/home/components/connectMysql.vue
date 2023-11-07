@@ -40,7 +40,7 @@
     </el-form>
     <template #footer>
       <el-button @click="handleClose">取 消</el-button>
-      <el-button type="primary" @click="submitForm">连 接</el-button>
+      <el-button type="primary" @click="submitForm" :loading="loading">连 接</el-button>
     </template>
   </el-dialog>
 </template>
@@ -54,6 +54,7 @@ const mysqlStore = useMysqlStore()
 const { proxy } = getCurrentInstance()
 
 const open = ref(false)
+const loading = ref(false)
 const rules = ref({
   host: [{ required: true, message: '主机必填', trigger: 'blur' }],
   port: [{ required: true, message: '端口必填', trigger: 'blur' }],
@@ -70,14 +71,17 @@ const emit = defineEmits(['updateMysqlStatus'])
 function submitForm() {
   proxy.$refs['mysqlFormRef'].validate((valid) => {
     if (valid) {
+      loading.value = true
       window.electronApi
         .connectMysql(JSON.stringify(mysqlStore.form))
         .then(() => {
+          loading.value = false
           proxy.$modal.msgSuccess('mysql已连接')
           emit('updateMysqlStatus', enumMysqlStatus['1'])
           handleClose()
         })
         .catch((err) => {
+          loading.value = false
           proxy.$modal.msgError('mysql连接错误: ' + err)
         })
     }

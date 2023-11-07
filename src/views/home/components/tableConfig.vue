@@ -182,11 +182,11 @@
         <template #default="{ row }">
           <el-select v-model="row.query" placeholder="查询方式" clearable>
             <el-option label="=" value="EQ" />
-            <el-option label="!=" value="NE" />
+            <!-- <el-option label="!=" value="NE" />
             <el-option label=">" value="GT" />
             <el-option label=">=" value="GTE" />
             <el-option label="<" value="LT" />
-            <el-option label="<=" value="LTE" />
+            <el-option label="<=" value="LTE" /> -->
             <el-option label="LIKE" value="LIKE" />
             <el-option label="BETWEEN" value="BETWEEN" />
           </el-select>

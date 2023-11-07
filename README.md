@@ -194,11 +194,6 @@ all: {}
 | 值 | 意思 |
 | --- | --- |
 | EQ | = 等值 |
-| NE | != 不等 |
-| GT | > 大于 |
-| GTE | >= 大于等于 |
-| LT | < 小于 |
-|LTE | <= 小于等于 |
 | LIKE | LIKE 模糊 |
 | BETWEEN | BETWEEN 范围查询（默认模板中只在 `FieldConfigItem.display` 为： `date` 、`datetime` 生效） |
 

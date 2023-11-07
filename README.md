@@ -61,6 +61,7 @@ fieldList: [
     name: 'field name',
     key: 'PRI',
     label: 'field comment',
+    dataType: 'mysql field type'
     addOrEdit: true,
     list: true,
     query: '',
@@ -173,6 +174,10 @@ all: {}
 #### `FieldConfigItem.label`
 `type: string`  
 页面中显示的字段label
+
+#### `FieldConfigItem.dataType`
+`type: string`  
+字段mysql类型
 
 #### `FieldConfigItem.addOrEdit`
 `type: Boolean`  

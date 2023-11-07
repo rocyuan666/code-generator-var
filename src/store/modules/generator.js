@@ -86,12 +86,14 @@ const useGeneratorStore = defineStore('generator', {
           name: item.COLUMN_NAME,
           comment: item.COLUMN_COMMENT,
           key: item.COLUMN_KEY, // PRI: 主键
+          dataType: item.DATA_TYPE,
         }))
         fieldInfoList.forEach((fieldItem) => {
           this.tableFieldConfig[item.name].fieldList.push({
             name: snakeFormatHump(fieldItem.name),
             key: fieldItem.key, // PRI: 主键
             label: fieldItem.comment,
+            dataType: fieldItem.dataType,
             addOrEdit: true,
             list: true,
             query: '',

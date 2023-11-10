@@ -3,29 +3,32 @@
     <el-affix>
       <div class="controller-box">
         <div class="mysql-status mb10">
-          <p class="text">
-            数据库状态:
-            <el-text type="danger" v-if="mysqlStore.mysqlStatus === enumMysqlStatus['0']">{{
-              mysqlStore.mysqlStatus
-            }}</el-text>
-            <el-text type="success" v-if="mysqlStore.mysqlStatus === enumMysqlStatus['1']">
-              {{ mysqlStore.mysqlStatus }} - {{ mysqlStore.form.database }}
-            </el-text>
-          </p>
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleConnectMysql"
-            v-if="mysqlStore.mysqlStatus === enumMysqlStatus['0']"
-            >连接</el-button
-          >
-          <el-button
-            type="danger"
-            size="small"
-            @click="handleConnectMysqlEnd"
-            v-if="mysqlStore.mysqlStatus === enumMysqlStatus['1']"
-            >断开</el-button
-          >
+          <div class="left">
+            <p class="text">
+              数据库状态:
+              <el-text type="danger" v-if="mysqlStore.mysqlStatus === enumMysqlStatus['0']">{{
+                mysqlStore.mysqlStatus
+              }}</el-text>
+              <el-text type="success" v-if="mysqlStore.mysqlStatus === enumMysqlStatus['1']">
+                {{ mysqlStore.mysqlStatus }} - {{ mysqlStore.form.database }}
+              </el-text>
+            </p>
+            <el-button
+              type="primary"
+              size="small"
+              @click="handleConnectMysql"
+              v-if="mysqlStore.mysqlStatus === enumMysqlStatus['0']"
+              >连接</el-button
+            >
+            <el-button
+              type="danger"
+              size="small"
+              @click="handleConnectMysqlEnd"
+              v-if="mysqlStore.mysqlStatus === enumMysqlStatus['1']"
+              >断开</el-button
+            >
+          </div>
+          <el-button type="warning" size="small" round @click="handleTips">说明</el-button>
         </div>
         <!-- 数据库表 -->
         <el-button type="primary" plain @click="handleGetTables" :loading="loading">
@@ -58,8 +61,9 @@
       </el-table-column>
     </el-table>
     <ConnectMysql ref="connectMysqlRef" @updateMysqlStatus="updateMysqlStatus" />
-    <GeneratorConfig ref="generatorConfig" />
-    <TableConfig ref="tableConfig" />
+    <GeneratorConfig ref="generatorConfigRef" />
+    <TableConfig ref="tableConfigRef" />
+    <Tips ref="tipsRef" />
   </div>
 </template>
 
@@ -69,6 +73,7 @@ import { enumMysqlStatus } from '@/enum'
 import ConnectMysql from './components/connectMysql.vue'
 import GeneratorConfig from './components/generatorConfig.vue'
 import TableConfig from './components/tableConfig.vue'
+import Tips from './components/tips.vue'
 import useMysqlStore from '@/store/modules/mysql'
 import useGeneratorStore from '@/store/modules/generator'
 
@@ -104,6 +109,13 @@ function handleConnectMysqlEnd() {
         })
     })
     .catch(() => {})
+}
+
+/**
+ * 打开说明
+ */
+function handleTips() {
+  proxy.$refs['tipsRef'].handleOpen()
 }
 
 /**
@@ -161,7 +173,7 @@ function handleSelectionChange(selection) {
  * @param {*} row
  */
 function handleTableFieldConfig(row) {
-  proxy.$refs['tableConfig'].handleOpen(row)
+  proxy.$refs['tableConfigRef'].handleOpen(row)
 }
 
 /**
@@ -194,7 +206,7 @@ function handleGenCode(event, tableName) {
  * 生成器配置
  */
 function handleGenCodeConfig() {
-  proxy.$refs['generatorConfig'].handleOpen()
+  proxy.$refs['generatorConfigRef'].handleOpen()
 }
 </script>
 
@@ -210,8 +222,13 @@ function handleGenCodeConfig() {
 .mysql-status {
   display: flex;
   align-items: center;
-  .text {
-    margin-right: 10px;
+  justify-content: space-between;
+  .left {
+    display: flex;
+    align-items: center;
+    .text {
+      margin-right: 10px;
+    }
   }
 }
 </style>

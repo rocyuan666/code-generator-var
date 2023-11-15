@@ -1,6 +1,6 @@
 {
   "name": "code-generator-VAR",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "rocyuan",
   "description": "code-generator-VAR",
   "main": "electron/app.electrom.js",

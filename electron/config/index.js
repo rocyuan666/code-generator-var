@@ -3,6 +3,7 @@
  */
 
 const path = require('path')
+const packageJson = require('../../package.json')
 
 module.exports = {
   env: 'development', // production || development
@@ -18,8 +19,8 @@ module.exports = {
   },
   loadingGif: path.join(__dirname, '../', 'assets', 'install.gif'),
   app: {
-    name: 'code-generator-VAR',
-    version: '0.1.0',
+    name: packageJson.name,
+    version: packageJson.version,
     bundleId: 'top.rocyuan.codeGeneratorVAR',
     copyright: 'Copyright (C) 2023 RocYuan',
   },

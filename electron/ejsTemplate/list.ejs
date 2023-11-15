@@ -187,7 +187,7 @@ _%>
       <%_ } _%>
       <%_ // 是否有 编辑 删除 功能 _%>
       <%_ if (hasEdit || hasDel) { _%>
-      <el-table-column label="操作" align="center" width="236" v-hasPermit="['<%= editPermisstion %>', '<%= delPermisstion %>']">
+      <el-table-column label="操作" align="center" fixed="right" width="236" v-hasPermit="['<%= editPermisstion %>', '<%= delPermisstion %>']">
         <template #default="{ row }">
           <%_ if (hasEdit) { _%>
           <el-button link type="primary" @click="handleEdit(row)" v-hasPermit="['<%= editPermisstion %>']" v-autoBlur>修改</el-button>

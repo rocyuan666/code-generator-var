@@ -193,21 +193,7 @@ const <%= dict %> = inject('<%= dict %>', () => [])
 <%_ } _%>
 <%_ } _%>
 
-const form = ref({
-<%_ for (const field of fieldList) { _%>
-  <%_ if (field.addOrEdit) { _%>
-  <%_ if (field.display === 'checkbox') { _%>
-  <%= field.name %>: [],
-  <%_ } else { _%>
-  <%= field.name %>: null,
-  <%_ } _%>
-  <%_ } _%>
-<%_ } _%>
-<%_ // 是否有子表数据 _%>
-<%_ if (subTable) { _%>
-  subTableData: [],
-<%_ } _%>
-})
+const form = ref({})
 const rules = ref({
 <%_ for (const field of fieldList) { _%>
   <%_ if (field.addOrEdit) { _%>
@@ -259,6 +245,21 @@ function submitForm() {
  * 重置表单
  */
 function reset() {
+  form.value = {
+  <%_ for (const field of fieldList) { _%>
+    <%_ if (field.addOrEdit) { _%>
+    <%_ if (field.display === 'checkbox') { _%>
+    <%= field.name %>: [],
+    <%_ } else { _%>
+    <%= field.name %>: null,
+    <%_ } _%>
+    <%_ } _%>
+  <%_ } _%>
+  <%_ // 是否有子表数据 _%>
+  <%_ if (subTable) { _%>
+    subTableData: [],
+  <%_ } _%>
+  }
   proxy.resetForm('addOrEditFormRef')
 }
 

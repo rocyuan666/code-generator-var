@@ -1,9 +1,9 @@
-# code-generator-var
+# code-generator-VAR
 
 ## 介绍
-vue-admin-roc（VAR）代码生成器；生成器默认的 `ejs` 模板生成的代码，只能在 `vue-admin-roc` 项目模板中使用（也支持指定自定义 `ejs` 模板）。  
+code-generator-VAR 是一款纯前端代码生成器，不依赖任何后端程序，使用简单，支持 windows、mac、linux 三大平台；生成器默认的 `ejs` 模板生成的代码，只能在 `vue-admin-roc` 项目模板中使用（也支持指定自定义 `ejs` 模板）。  
 `vue-admin-roc` 是一个 vite + vue3 + pinia 的纯前端后台管理系统模板，可通过 `roc-cli` 脚手架工具创建。  
-**推荐使用 vue-admin-roc 项目模板，可与 code-generator-var 直接结合使用**
+**推荐使用 vue-admin-roc 项目模板，可与 code-generator-VAR 直接结合使用**
 
 ## 创建 vue-admin-roc 项目模板
 

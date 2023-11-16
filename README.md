@@ -1,23 +1,40 @@
 # code-generator-VAR
 
 ## 介绍
-code-generator-VAR 是一款纯前端代码生成器，不依赖任何后端程序，使用简单，支持 windows、mac、linux 三大平台；生成器默认的 `ejs` 模板生成的代码，只能在 `vue-admin-roc` 项目模板中使用（也支持指定自定义 `ejs` 模板）。  
-`vue-admin-roc` 是一个 vite + vue3 + pinia 的纯前端后台管理系统模板，可通过 `roc-cli` 脚手架工具创建。  
-**推荐使用 vue-admin-roc 项目模板，可与 code-generator-VAR 直接结合使用**
+code-generator-VAR 是一款纯前端代码生成器，不依赖任何后端程序，使用简单，支持 windows、mac、linux 三大平台；生成器生成的代码，默认是需要在 `vue-admin-roc(vue3.x)` 项目模板中使用（也可以不使用该模版，编写自定义`ejs`模板）。  
+`vue-admin-roc(vue3.x)` 是一个 vite + vue3 + pinia 的纯前端后台管理系统模板，可通过 `roc-cli` 脚手架工具创建。  
+**推荐使用 `vue-admin-roc(vue3.x)` 项目模板，可与 `code-generator-VAR` 直接结合使用**
 
-## 创建 vue-admin-roc 项目模板
+## 使用方式
 
-1. 安装 `roc-cli` 方式  
-使用 `npm install -g roc-cli` 安装 roc-cli，安装完成后全局可用 `roc` 命令；  
-使用 `roc create 项目名` 选择 `vue-admin-roc(vue3.x)` 创建项目模板。
+### 1.安装生成器
 
-2. npx方式  
-使用 ` npx roc-cli create 项目名 ` 选择 `vue-admin-roc(vue3.x)` 创建项目模板。
+下载地址：[https://github.com/rocyuan666/code-generator-var/releases](https://github.com/rocyuan666/code-generator-var/releases)  
+windows版本：`code-generator-VAR-win32-x64-x.x.x.msi`、`code-generator-VAR-win32-x64-x.x.x.zip`    
+linux版本：`code-generator-var_x.x.x_amd64.deb`、`code-generator-VAR-linux-x64-x.x.x.zip`  
+mac版本：`code-generator-VAR-darwin-arm64-x.x.x.zip`
+
+### 2.使用生成器生成
+
+生成器使用：  
+- 点击`连接`输入数据库信息连接数据库
+- 点击`获取表数据`将会拉取所连接的数据库表信息
+- 点击每一行后的`配置`配置生成代码的数据配置
+- 生成某一张表：点击每一行后面的`生成代码`将会生成该行（表）的前端代码
+- 批量生成：选中每一行前面的选择框（顶部选择框可以全选），点顶部的`生成代码`将会生成所选行（表）的前端代码
+
+生成器配置：可以配置生成代码的输出目录、项目名称、及四种生成模版（提供自定义模版使用，需要一定的`ejs`知识）  
+生成代码的目录为：`配置的输出目录/配置的项目名称/vue/api`、`配置的输出目录/配置的项目名称/vue/views`、`配置的输出目录/配置的项目名称/vue/router`
+
+### 3.创建 vue-admin-roc(vue3.x) 项目模板
+
+默认生成的代码是需要创建`vue-admin-roc(vue3.x)`项目模版使用。
+
+命令行中使用 ` npx roc-cli create 项目名 ` 选择 `vue-admin-roc(vue3.x)` 创建项目模板。
 
 示例：
 ```bash
-npm install -g roc-cli
-roc create project-name
+npx roc-cli create project-name
 
 Please select the project type to create:
   vue2.x
@@ -29,15 +46,17 @@ Please select the project type to create:
   koa
 ```
 
-如果使用的是自己创建的前端后台管理模板，需要在生成器配置中指定自定义 `ejs` 模板！
+### 4.生成的代码使用
 
-## 如何使用生成的代码？
+确保以下两步已完成：
+- 生成代码完成
+- 创建 `vue-admin-roc(vue3.x)` 模版完成 
 
-生成代码后将生成的代码（路径：`配置的输出目录/项目名/vue/*`）复制进 `vue-admin-roc(vue3.x)` 项目模版中的 `src/` 中。
+将生成的代码（`配置的输出目录/配置的项目名称/vue/*`）整合进项目模版的 `src/*` 下，进行常规开发即可。
 
 ## 自定义ejs模板
-生成器内部使用 `ejs` 编写代码模板，只支持 `ejs` 模板。  
-生成器内部暴露给 `ejs` 模板的数据:
+如项目没有使用 `vue-admin-roc(vue3.x)` 模版，生成出来的代码是使用不了的，需要根据自己项目结构编写自定义的生成模版，生成器内部使用 `ejs` 编写代码模板，只支持 `ejs` 模板。  
+生成器内部暴露给 `ejs` 模板的数据，开发者可根据以下数据进行自定义模版的编写，写好模版后，可在生成器软件的`生成器配置`中选择自定义的`ejs模版`进行代码生成:
 
 ```
 hasAdd: true,

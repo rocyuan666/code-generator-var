@@ -6,7 +6,6 @@ const path = require('path')
 const packageJson = require('../../package.json')
 
 module.exports = {
-  env: 'development', // production || development
   prodLoadFile: path.join(__dirname, '../../', 'dist', 'index.html'),
   devLoadURL: 'http://localhost:9876',
   appIcon: path.join(__dirname, '../', 'assets', 'icon', 'icon.png'),

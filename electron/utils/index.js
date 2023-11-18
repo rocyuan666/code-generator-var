@@ -16,9 +16,7 @@ function initEjsTemplate() {
     const ejsFileNames = fs.readdirSync(appEjsDataDir)
     // 开发环境复制替换ejs模板
     // 生产环境判断模板是否存在  存在则不进行复制覆盖
-    if (cfg.env === 'development') {
-      copyTemplateFile()
-    } else {
+    if (app.isPackaged) {
       if (ejsFileNames.includes('template.json')) {
         // 处理版本
         const appTemplateJson = fs.readJSONSync(
@@ -31,6 +29,8 @@ function initEjsTemplate() {
       } else {
         copyTemplateFile()
       }
+    } else {
+      copyTemplateFile()
     }
   } catch (error) {
     console.log(error)

@@ -27,11 +27,11 @@ function createWindow() {
   win.show()
   win.removeMenu()
 
-  if (cfg.env == 'production') {
+  if (app.isPackaged) {
     win.loadFile(cfg.prodLoadFile)
   } else {
-    win.loadURL(cfg.devLoadURL)
     win.webContents.openDevTools()
+    win.loadURL(cfg.devLoadURL)
   }
 
   // mainWindowState.manage(win)

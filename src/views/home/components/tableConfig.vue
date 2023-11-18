@@ -128,13 +128,27 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="选择子表" prop="subTable">
+            <template #label>
+              <div style="display: flex; align-items: center">
+                <p style="margin-right: 2px">选择子表</p>
+                <el-tooltip
+                  effect="dark"
+                  content="禁止套娃！已是子表的请勿设置子表"
+                  placement="top"
+                >
+                  <el-icon style="cursor: pointer" size="16"><WarningFilled /></el-icon>
+                </el-tooltip>
+              </div>
+            </template>
             <el-select
               v-model="generatorStore.tableFieldConfig[tableName].subTable"
               placeholder="选择子表"
               clearable
             >
               <el-option
-                v-for="item in generatorStore.tableInfoList"
+                v-for="item in generatorStore.tableInfoList.filter(
+                  (item) => item.name !== tableName
+                )"
                 :key="item.name"
                 :label="item.comment"
                 :value="item.name"

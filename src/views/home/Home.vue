@@ -212,7 +212,7 @@ function handleGenCodeConfig() {
 
 <style lang="scss" scoped>
 .app {
-  padding: 0 10px 10px 10px;
+  padding: 0 10px 0 10px;
   .controller-box {
     width: 100%;
     background-color: #fff;

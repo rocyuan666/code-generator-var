@@ -173,10 +173,11 @@
       class="mb10"
     />
     <el-table
-      v-if="fieldTableShow"
+      :key="changeKey"
       id="fieldTableId"
       :data="generatorStore.tableFieldConfig[tableName].fieldList"
       empty-text="暂无数据~"
+      :height="49 * generatorStore.tableFieldConfig[tableName].fieldList.length + 40"
     >
       <el-table-column label="序号" type="index" align="center" width="80"></el-table-column>
       <el-table-column label="字段名" prop="name" align="center">
@@ -264,7 +265,7 @@ import Sortable from 'sortablejs'
 import useGeneratorStore from '@/store/modules/generator'
 import { cloneDeep } from 'lodash'
 
-const fieldTableShow = ref(true)
+const changeKey = ref(new Date().valueOf())
 const generatorStore = useGeneratorStore()
 const tableName = ref('')
 const title = ref('')
@@ -318,12 +319,9 @@ function initSortable() {
  * 表格重新渲染
  */
 function reRenderTable() {
-  fieldTableShow.value = false
+  changeKey.value = new Date().valueOf()
   nextTick(() => {
-    fieldTableShow.value = true
-    nextTick(() => {
-      initSortable()
-    })
+    initSortable()
   })
 }
 

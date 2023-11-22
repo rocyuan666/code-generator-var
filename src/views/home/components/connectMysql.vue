@@ -99,6 +99,7 @@ function handleOpen() {
  * 关闭弹框
  */
 function handleClose() {
+  proxy.$refs['mysqlFormRef'].clearValidate()
   open.value = false
 }
 

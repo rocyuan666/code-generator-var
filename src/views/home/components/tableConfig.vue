@@ -1,5 +1,11 @@
 <template>
-  <el-dialog :title="title" v-model="open" width="96%" :close-on-click-modal="false">
+  <el-dialog
+    :title="title"
+    v-model="open"
+    width="96%"
+    :close-on-click-modal="false"
+    destroy-on-close
+  >
     <el-divider>表设置</el-divider>
     <el-alert
       description="本表是否有 添加、编辑、删除、导出、子表、api地址功能配置"
@@ -160,13 +166,18 @@
     </el-form>
     <el-divider>字段设置</el-divider>
     <el-alert
-      description="本表字段功能配置，红颜色为主键字段"
+      description="本表字段功能配置，红颜色为主键字段，字段可拖拽排序"
       type="warning"
       show-icon
       :closable="false"
       class="mb10"
     />
-    <el-table :data="generatorStore.tableFieldConfig[tableName].fieldList" empty-text="暂无数据~">
+    <el-table
+      v-if="fieldTableShow"
+      id="fieldTableId"
+      :data="generatorStore.tableFieldConfig[tableName].fieldList"
+      empty-text="暂无数据~"
+    >
       <el-table-column label="序号" type="index" align="center" width="80"></el-table-column>
       <el-table-column label="字段名" prop="name" align="center">
         <template #default="{ row }">
@@ -248,22 +259,72 @@
 </template>
 
 <script setup name="TableConfig">
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
+import Sortable from 'sortablejs'
 import useGeneratorStore from '@/store/modules/generator'
+import { cloneDeep } from 'lodash'
 
+const fieldTableShow = ref(true)
 const generatorStore = useGeneratorStore()
 const tableName = ref('')
 const title = ref('')
 const open = ref(false)
 
+/**
+ * 打包对话框
+ * @param {*} row
+ */
 function handleOpen(row) {
   tableName.value = row.name
   title.value = `${row.name} 表配置`
   open.value = true
+  nextTick(() => {
+    initSortable()
+  })
 }
 
+/**
+ * 关闭对话框
+ */
 function handleClose() {
   open.value = false
+}
+
+/**
+ * 初始化拖拽排序
+ */
+function initSortable() {
+  const fieldTableDom = document.querySelector('#fieldTableId tbody')
+  Sortable.create(fieldTableDom, {
+    animation: 150,
+    onEnd(event) {
+      if (event.oldIndex !== event.newIndex) {
+        const currentItem = cloneDeep(
+          generatorStore.tableFieldConfig[tableName.value].fieldList[event.oldIndex]
+        )
+        generatorStore.tableFieldConfig[tableName.value].fieldList.splice(event.oldIndex, 1)
+        generatorStore.tableFieldConfig[tableName.value].fieldList.splice(
+          event.newIndex,
+          0,
+          currentItem
+        )
+        reRenderTable()
+      }
+    },
+  })
+}
+
+/**
+ * 表格重新渲染
+ */
+function reRenderTable() {
+  fieldTableShow.value = false
+  nextTick(() => {
+    fieldTableShow.value = true
+    nextTick(() => {
+      initSortable()
+    })
+  })
 }
 
 defineExpose({

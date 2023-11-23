@@ -63,7 +63,7 @@ async function getTables(event, databaseName) {
  */
 async function getFields(event, databaseName, tableName) {
   const sql =
-    'SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = ? AND table_name = ?'
+    'SELECT * FROM `information_schema`.`columns` WHERE TABLE_SCHEMA = ? AND table_name = ? ORDER BY ORDINAL_POSITION ASC'
   const result = await poolPromise.execute(sql, [databaseName, tableName])
   return result[0]
 }

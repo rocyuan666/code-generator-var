@@ -31,6 +31,10 @@ const useGeneratorStore = defineStore('generator', {
     setGenConfig(genConfig) {
       this.genConfig.projectName = genConfig.projectName
       this.genConfig.outPutDir = genConfig.outPutDir
+      this.genConfig.apiEjsFilePath = genConfig.apiEjsFilePath
+      this.genConfig.listEjsFilePath = genConfig.listEjsFilePath
+      this.genConfig.addEditEjsFilePath = genConfig.addEditEjsFilePath
+      this.genConfig.routerEjsFilePath = genConfig.routerEjsFilePath
     },
 
     /**

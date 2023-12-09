@@ -30,11 +30,11 @@
           </div>
           <el-button type="warning" size="small" round @click="handleTips">说明</el-button>
         </div>
+        <el-button type="warning" plain @click="handleGenCodeConfig">生成器配置</el-button>
         <!-- 数据库表 -->
         <el-button type="primary" plain @click="handleGetTables" :loading="loading">
           获取表信息
         </el-button>
-        <el-button type="warning" plain @click="handleGenCodeConfig">生成器配置</el-button>
         <el-button type="success" plain @click="handleGenCode" :disabled="!selectData.length">
           生成代码
         </el-button>

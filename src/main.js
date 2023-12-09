@@ -12,6 +12,10 @@ import pinia from '@/store'
 // 导入进度条样式
 import 'nprogress/nprogress.css'
 
+const appName = await window.electronApi.getAppName()
+const appVersion = await window.electronApi.getAppVersion()
+document.title = `${appName} - v${appVersion}`
+
 // fix: error ResizeObserver loop limit exceeded
 const debounce = (fn, delay) => {
   let timer = null

@@ -1,6 +1,8 @@
 const { ipcMain } = require('electron')
 const { connectMysql, connectMysqlEnd, getTables, getFields } = require('../webapi/mysql')
 const {
+  getAppName,
+  getAppVersion,
   getPath,
   getDirPath,
   getFilePath,
@@ -11,6 +13,8 @@ const {
 } = require('../webapi/generator')
 
 function defineIpcMain() {
+  ipcMain.handle('getAppName', getAppName)
+  ipcMain.handle('getAppVersion', getAppVersion)
   // 数据库相关
   ipcMain.handle('connectMysql', connectMysql)
   ipcMain.handle('connectMysqlEnd', connectMysqlEnd)

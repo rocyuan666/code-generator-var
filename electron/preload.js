@@ -9,6 +9,8 @@ contextBridge.exposeInMainWorld('electronApi', {
   node: () => process.versions.node,
   chrome: () => process.versions.chrome,
   electron: () => process.versions.electron,
+  getAppName: () => ipcRenderer.invoke('getAppName'),
+  getAppVersion: () => ipcRenderer.invoke('getAppVersion'),
   // 数据库相关
   connectMysql: (connData) => ipcRenderer.invoke('connectMysql', connData),
   connectMysqlEnd: () => ipcRenderer.invoke('connectMysqlEnd'),

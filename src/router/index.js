@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { appName } from '@/config/index'
 
 const Home = () => import('@/views/home/Home.vue')
 
@@ -33,10 +32,7 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
-  if (to.meta.title) {
-    // document.title = `${appName} - ${to.meta.title}`
-  }
+router.beforeEach(async (to, from, next) => {
   next()
 })
 

@@ -15,5 +15,3 @@ export const timeOut = 60
 export const tokenName = 'token'
 // 配后端数据的接收方式application/json;charset=UTF-8 或 application/x-www-form-urlencoded;charset=UTF-8
 export const contentType = 'application/x-www-form-urlencoded;charset=UTF-8'
-// 应用名称
-export const appName = 'code-generator-VAR'

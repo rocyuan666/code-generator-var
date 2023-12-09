@@ -1,18 +1,18 @@
 const { app, BrowserWindow, Tray } = require('electron')
-// const windowState = require('electron-window-state')
+const windowState = require('electron-window-state')
 const path = require('path')
 const cfg = require('./config')
 const { defineIpcMain } = require('./ipcMain')
 const { initEjsTemplate } = require('./utils')
 
 function createWindow() {
-  // const mainWindowState = windowState({
-  //   defaultWidth: 1300,
-  //   defaultHeight: 900,
-  // })
+  const mainWindowState = windowState({
+    defaultWidth: 1300,
+    defaultHeight: 900,
+  })
   const win = new BrowserWindow({
-    // ...mainWindowState,
-    title: cfg.app.name,
+    ...mainWindowState,
+    title: `${cfg.app.name} - v${app.getVersion()}`,
     icon: cfg.appIcon,
     show: false,
     webPreferences: {
@@ -34,7 +34,7 @@ function createWindow() {
     win.loadURL(cfg.devLoadURL)
   }
 
-  // mainWindowState.manage(win)
+  mainWindowState.manage(win)
 }
 
 app.whenReady().then(() => {

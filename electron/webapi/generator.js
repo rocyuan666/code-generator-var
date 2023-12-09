@@ -6,6 +6,22 @@ const ejs = require('ejs')
 const { snakeFormatHump } = require('../utils')
 
 /**
+ * 获取应用名称
+ * @returns
+ */
+function getAppName(event) {
+  return cfg.app.name
+}
+
+/**
+ * 获取应用版本
+ * @returns
+ */
+function getAppVersion(event) {
+  return app.getVersion()
+}
+
+/**
  * 获取 应用程序目录
  * @param {*} event
  * @param {String} name
@@ -157,10 +173,7 @@ function genCode(event, tableNameList = [], genJsonData = {}) {
       return new Promise((resolve, reject) => {
         ejs.renderFile(ejsPath, ejsContentData, (err, str) => {
           if (err) return reject(err)
-          fs.outputFileSync(
-            path.resolve(genConfig.outPutDir, genConfig.projectName, 'vue', outPath),
-            str
-          )
+          fs.outputFileSync(path.resolve(genConfig.outPutDir, genConfig.projectName, outPath), str)
           resolve('输出成功')
         })
       })
@@ -215,6 +228,8 @@ function genCode(event, tableNameList = [], genJsonData = {}) {
 }
 
 module.exports = {
+  getAppName,
+  getAppVersion,
   getPath,
   getDirPath,
   getFilePath,

@@ -1,56 +1,69 @@
-import { createApp } from 'vue'
-import ElementPlus from 'element-plus'
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
-import 'element-plus/dist/index.css'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+const { app, BrowserWindow } = require('electron')
+const windowState = require('electron-window-state')
+const path = require('path')
+const cfg = require('./config')
+const { defineIpcMain } = require('./ipc')
+const { isHttpOrHttps } = require('./utils/roc')
+const { initEjsTemplate } = require('./utils')
+const { createTray } = require('./main/tray')
+const { nohup } = require('./main/nohup')
 
-import App from './App.vue'
-import router from './router'
-import modal from '@/utils/modal'
-import pinia from '@/store'
-
-// 导入进度条样式
-import 'nprogress/nprogress.css'
-
-const appName = await window.electronApi.getAppName()
-const appVersion = await window.electronApi.getAppVersion()
-document.title = `${appName} - v${appVersion}`
-
-// fix: error ResizeObserver loop limit exceeded
-const debounce = (fn, delay) => {
-  let timer = null
-  return function () {
-    let context = this
-    let args = arguments
-    clearTimeout(timer)
-    timer = setTimeout(function () {
-      fn.apply(context, args)
-    }, delay)
-  }
-}
-const _ResizeObserver = window.ResizeObserver
-window.ResizeObserver = class ResizeObserver extends _ResizeObserver {
-  constructor(callback) {
-    callback = debounce(callback, 16)
-    super(callback)
-  }
+if (require('electron-squirrel-startup')) {
+  app.quit()
 }
 
-const app = createApp(App)
+function createWindow() {
+  const mainWindowState = windowState({
+    defaultWidth: 1300,
+    defaultHeight: 900,
+  })
+  const win = new BrowserWindow({
+    ...mainWindowState,
+    title: `${cfg.app.name} - v${app.getVersion()}`,
+    icon: cfg.appIcon,
+    show: false,
+    webPreferences: {
+      backgroundThrottling: false, // 是否在页面成为背景时限制动画和计时器 默认值为 true
+      nodeIntegration: false, // 是否启用集成Node. 默认值为 false
+      contextIsolation: true, // 上下文隔离关闭  默认为 true
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  })
 
-app.config.globalProperties.$modal = modal
+  if (app.isPackaged) {
+    isHttpOrHttps(cfg.prodLoad) ? win.loadURL(cfg.prodLoad) : win.loadFile(cfg.prodLoad)
+  } else {
+    win.webContents.openDevTools()
+    isHttpOrHttps(cfg.devLoad) ? win.loadURL(cfg.devLoad) : win.loadFile(cfg.devLoad)
+  }
 
-app.use(pinia)
-app.use(router)
-app.use(ElementPlus, {
-  locale: zhCn,
-  // 支持 large default small
-  size: 'default',
+  win.maximize()
+  win.show()
+  win.removeMenu()
+  nohup(win)
+  // 创建托盘
+  createTray(win)
+  // 定义ipcMain
+  defineIpcMain()
+  // 初始化ejs模板文件
+  initEjsTemplate()
+
+  mainWindowState.manage(win)
+}
+
+app.whenReady().then(() => {
+  createWindow()
+  app.on('activate', () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow()
+    }
+  })
 })
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
 
-app.mount('#app')
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
 
-window.localStorage.clear()
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'

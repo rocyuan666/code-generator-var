@@ -1,17 +1,27 @@
-/*
- * @作者：rocyuan（袁鹏）
- * @邮箱：roc@rocyuan.top、rocyuan666@163.com
- * @微信：rocyuan666
- * @个人网站：http://rocyuan.top
+/**
+ * electron 配置文件
  */
 
-// 开发环境base api (已做代理)
-export const devBaseUrl = '/api'
-// 生产环境base api
-export const proBaseUrl = 'http://rocyuan.top:8080'
-// 网络请求超时时间(s)
-export const timeOut = 60
-// 储存token的标识
-export const tokenName = 'token'
-// 配后端数据的接收方式application/json;charset=UTF-8 或 application/x-www-form-urlencoded;charset=UTF-8
-export const contentType = 'application/x-www-form-urlencoded;charset=UTF-8'
+const path = require('path')
+const packageJson = require('../../package.json')
+
+module.exports = {
+  devLoad: 'http://localhost:9674',
+  prodLoad: path.join(__dirname, '../../web/index.html'),
+  appIcon: path.join(__dirname, '../assets/icon/icon.png'),
+  buildIcon: {
+    win: path.join(__dirname, '../assets/icon/icon.ico'),
+    mac: path.join(__dirname, '../assets/icon/icon.icns'),
+    linux: path.join(__dirname, '../assets/icon/icon.png'),
+    iconNoExt: path.join(__dirname, '../assets/icon/icon'),
+    squirrel: 'https://rocyuan666.gitee.io/favicon.ico',
+  },
+  // squirrel打包loading动画
+  loadingGif: path.join(__dirname, '../assets/install.gif'),
+  app: {
+    name: packageJson.name,
+    version: packageJson.version,
+    bundleId: 'top.rocyuan.codegeneratorvar',
+    copyright: 'Copyright (C) 2023 RocYuan',
+  },
+}

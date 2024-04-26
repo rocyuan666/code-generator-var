@@ -2,9 +2,8 @@
  * electron-forge 打包配置
  *
  * @作者：rocyuan（袁鹏）
- * @邮箱：rocyuan666@163.com、roc@rocyuan.top
+ * @邮箱：rocyuan666@163.com
  * @微信：rocyuan666
- * @个人网站：https://rocyuan.top
  */
 
 // const {
@@ -12,7 +11,7 @@
 // } = require('@electron-forge/core')
 const os = require('os')
 const { execSync } = require('child_process')
-const { icon, loadingGif, app } = require('./electron/config')
+const { buildIcon, loadingGif, app } = require('./src/config')
 
 // 系统类型
 const osType = os.type()
@@ -25,6 +24,14 @@ let makers = [
 if (osType == 'Windows_NT') {
   makers.push(
     {
+      name: '@electron-forge/maker-squirrel',
+      config: {
+        iconUrl: buildIcon.squirrel,
+        loadingGif,
+        setupIcon: buildIcon.win,
+      },
+    },
+    {
       /**
        * 构建msi安装包，电脑需要安装 wixtool 并配置环境变量
        * 如：C:\Program Files (x86)\WiX Toolset v3.11\bin
@@ -32,15 +39,7 @@ if (osType == 'Windows_NT') {
        */
       name: '@electron-forge/maker-wix',
       config: {
-        icon: icon.win,
-      },
-    },
-    {
-      name: '@electron-forge/maker-squirrel',
-      config: {
-        iconUrl: icon.squirrel,
-        loadingGif,
-        setupIcon: icon.win,
+        icon: buildIcon.win,
       },
     }
   )
@@ -48,10 +47,15 @@ if (osType == 'Windows_NT') {
   makers.push({
     name: '@electron-forge/maker-dmg',
     config: {
-      icon: icon.mac,
+      icon: buildIcon.mac,
     },
   })
 } else if (osType == 'Linux') {
+  /**
+   * 使用 lsb_release 判断系统类型，请先安装LSB
+   * dabian系: sudo apt-get install lsb-release
+   * RedHat系: sudo yum install redhat-lsb
+   */
   try {
     const stdout = execSync('lsb_release -a')
     if (stdout.indexOf('Ubuntu') != -1) {
@@ -63,7 +67,7 @@ if (osType == 'Windows_NT') {
         name: '@electron-forge/maker-deb',
         config: {
           options: {
-            icon: icon.linux,
+            icon: buildIcon.linux,
           },
         },
       })
@@ -77,7 +81,7 @@ if (osType == 'Windows_NT') {
          */
         name: '@electron-forge/maker-rpm',
         config: {
-          icon: icon.linux,
+          icon: buildIcon.linux,
         },
       })
     }
@@ -87,7 +91,9 @@ if (osType == 'Windows_NT') {
 }
 
 module.exports = {
+  // buildIdentifier 配合 fromBuildIdentifier 使用
   // buildIdentifier: 'production',
+  // https://electron.github.io/packager/main/interfaces/Options.html
   packagerConfig: {
     // appBundleId: fromBuildIdentifier({ production: 'top.rocyuan.app' }),
     name: app.name,
@@ -95,14 +101,29 @@ module.exports = {
     appBundleId: app.bundleId,
     appCopyright: app.copyright,
     asar: true,
-    icon: icon.iconNoExt,
+    // 应用程序的图标(makers中配置的图标是安装程序的图标)
+    icon: buildIcon.iconNoExt,
+    ignore: [
+      'wixtool',
+      '.vscode',
+      '.idea',
+      '.git',
+      'script',
+      '.eslintignore',
+      '.eslintrc.cjs',
+      '.gitignore',
+      '.npmrc',
+      '.prettierrc.json',
+      'forge.config.js',
+      'jsconfig.json',
+      'package-lock.json',
+      'LICENSE',
+      'README.md',
+      'vue',
+    ],
   },
+  // https://github.com/electron/rebuild#how-can-i-integrate-this-into-grunt--gulp--whatever
   rebuildConfig: {},
   makers,
-  plugins: [
-    {
-      name: '@electron-forge/plugin-auto-unpack-natives',
-      config: {},
-    },
-  ],
+  plugins: [],
 }

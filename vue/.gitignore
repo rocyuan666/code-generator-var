@@ -18,12 +18,10 @@ coverage
 /cypress/screenshots/
 
 # Editor directories and files
-.idea
 .vscode
+.idea
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-
-/out

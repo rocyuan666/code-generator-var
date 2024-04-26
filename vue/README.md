@@ -1,17 +1,8 @@
-# roc-cli-electron-vue3-template
+# roc-cli-vue3-template
 
-roc 脚手架 electron(vue3) 项目模板
+roc 脚手架 vue3 项目模板
 
-```bash
-# 安装依赖
-npm run install-all
-
-# 开发启动
-npm run dev
-
-# 打包构建安装包
-npm run make
-```
+个人网站: [https://rocyuan666.github.io](https://rocyuan666.github.io)
 
 # roc-cli
 

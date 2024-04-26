@@ -1,19 +1,16 @@
-const { exec, execSync } = require('child_process')
+const { exec } = require('child_process')
 const path = require('path')
 
-try {
-  const workPath = path.join(__dirname, '../')
-  execSync(`cd ${workPath}`)
+const workPath = path.join(__dirname, '../')
 
-  console.log('web程序启动中，启动时间可能较慢，请耐心等待...')
-  exec('npm run web:dev', (err) => {
-    if (err) return console.log('web程序启动失败', err)
-  })
+exec('npm run vue:dev', { cwd: workPath }, (err) => {
+  if (err) return console.log('vue程序启动失败', err)
+})
 
-  console.log('electron程序启动中,启动过程中会实时监测修改并重启...')
-  exec('npm run ele:dev', (err) => {
-    if (err) return console.log('electron程序启动失败', err)
-  })
-} catch (error) {
-  console.log(error)
-}
+exec('npm run ele:dev', { cwd: workPath }, (err) => {
+  if (err) return console.log('electron程序启动失败', err)
+})
+
+console.log('vue程序启动中...')
+console.log('electron程序启动中...')
+console.log('请稍等...')

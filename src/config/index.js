@@ -7,7 +7,7 @@ const packageJson = require('../../package.json')
 
 module.exports = {
   devLoad: 'http://localhost:9674',
-  prodLoad: path.join(__dirname, '../../web/index.html'),
+  prodLoad: path.join(__dirname, '../../views/index.html'),
   appIcon: path.join(__dirname, '../assets/icon/icon.png'),
   buildIcon: {
     win: path.join(__dirname, '../assets/icon/icon.ico'),

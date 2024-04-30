@@ -104,6 +104,10 @@ module.exports = {
     // 应用程序的图标(makers中配置的图标是安装程序的图标)
     icon: buildIcon.iconNoExt,
     ignore: [
+      'src',
+      'web',
+      'node_modules',
+      'build',
       'wixtool',
       '.vscode',
       '.idea',

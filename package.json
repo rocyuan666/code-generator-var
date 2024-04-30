@@ -1,19 +1,18 @@
 {
   "name": "code-generator-var",
-  "version": "0.1.4",
-  "author": "rocyuan",
   "description": "code-generator-var",
-  "main": "./src/main.js",
+  "version": "0.1.4",
+  "main": "dist/main.js",
+  "author": "rocyuan",
   "scripts": {
     "ci-all": "npm ci && cd vue && npm ci",
     "install-all": "npm install && cd vue && npm install",
     "dev": "node script/dev.js",
-    "make": "npm run vue:build && npm run ele:make",
-    "package": "npm run vue:build && npm run ele:package",
+    "make": "electron-forge make",
+    "package": "electron-forge package",
     "ele:dev": "nodemon --exec electron-forge start --watch src/ --ext .js,.cjs,.mjs",
     "ele:start": "electron-forge start",
-    "ele:package": "electron-forge package",
-    "ele:make": "electron-forge make",
+    "ele:build": "node build/build.js",
     "vue:dev": "cd vue && npm run dev",
     "vue:build": "npm run vue:build:prod",
     "vue:build:prod": "cd vue && npm run build:prod && shx rm -rf ../web/* && shx cp -R dist/* ../web/",
@@ -31,18 +30,21 @@
     "@electron-forge/maker-wix": "^7.4.0",
     "@electron-forge/maker-zip": "^7.4.0",
     "@rushstack/eslint-patch": "^1.10.2",
+    "copy-webpack-plugin": "^12.0.2",
     "electron": "^30.0.1",
     "eslint": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
-    "shx": "^0.3.4"
+    "shx": "^0.3.4",
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack": "^5.91.0"
   },
   "dependencies": {
     "ejs": "^3.1.9",
-    "fs-extra": "^11.1.1",
-    "mysql2": "^3.6.1",
     "electron-squirrel-startup": "^1.0.0",
-    "electron-window-state": "^5.0.3"
+    "electron-window-state": "^5.0.3",
+    "fs-extra": "^11.1.1",
+    "mysql2": "^3.6.1"
   }
 }

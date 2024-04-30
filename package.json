@@ -2,7 +2,7 @@
   "name": "code-generator-var",
   "description": "code-generator-var",
   "version": "0.1.4",
-  "main": "dist/main.js",
+  "main": "src/main.js",
   "author": "rocyuan",
   "scripts": {
     "ci-all": "npm ci && cd vue && npm ci",

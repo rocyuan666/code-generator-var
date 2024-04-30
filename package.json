@@ -1,7 +1,7 @@
 {
   "name": "code-generator-var",
   "description": "code-generator-var",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "src/main.js",
   "author": "rocyuan",
   "scripts": {

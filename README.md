@@ -8,7 +8,7 @@ code-generator-VAR 是一款纯前端代码生成器，不依赖任何后端程�
 
 ## 演示视频
 
-[点击查看](https://www.bilibili.com/video/BV1qN411g7eE/?spm_id_from=333.999.0.0&vd_source=ebbf099c9e8fce759120f1f2a1094bcb)
+<a href="https://www.bilibili.com/video/BV1qN411g7eE/?spm_id_from=333.999.0.0&vd_source=ebbf099c9e8fce759120f1f2a1094bcb" target="_blank">点击查看</a>
 
 ## 使用方式
 

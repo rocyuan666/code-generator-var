@@ -1,11 +1,22 @@
 <%_ if (hasAdd || hasEdit) { _%>
 <%_
 // 本表是否有配置 字典数据 的字段
-const _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
+let _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
 // 本表 配置的字典标识数组（去重过的）
-const _uniDictList = [...new Set(fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
+let _uniDictList = [...new Set(fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
 // 主键字段数据
 const pkField =  fieldList.find((item) => item.key === 'PRI') || {}
+
+if (subTable) {
+  // 子表表是否有配置 字典数据 的字段
+  const _hasDictSub = _sub.fieldList.some((fieldItem) => fieldItem.dict != '')
+  // 子表表是否有配置 字典数据 的字段
+  const _uniDictListSub = [...new Set(_sub.fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
+  // 包含子表是否配置字典
+  _hasDict = _hasDict ?  _hasDict : _hasDictSub
+  // 包含子表字典标识数组（去重过的）
+  _uniDictList = [...new Set([..._uniDictList, ..._uniDictListSub])]
+}
 _%>
 <template>
   <el-dialog :title="title" v-model="open" width="1000px" :close-on-click-modal="false" append-to-body>
@@ -93,7 +104,7 @@ _%>
           <%_ const label = subField.unit ? `${subField.label}（${subField.unit}）` : subField.label _%>
           <el-table-column label="<%= label %>" align="center" prop="<%= subField.name %>">
             <%_ if (subField.required) { _%>
-            <template #header> <span class="roc-require"></span><%= subTableLabel %> </template>
+            <template #header> <span class="roc-require"></span><%= subField.label %> </template>
             <%_ } _%>
             <template #default="{ row }">
               <%_ if (subField.display === 'input') { _%>
@@ -186,6 +197,7 @@ import { edit<%= fn.snakeFormatHump(name, true) %> } from '@/api/<%= fn.snakeFor
 
 const { proxy } = getCurrentInstance()
 const emit = defineEmits(['updateList'])
+<%= _uniDictList.length %>
 <%_ if (_hasDict) { _%>
 // 注入字典数据
 <%_ for (const dict of _uniDictList) { _%>

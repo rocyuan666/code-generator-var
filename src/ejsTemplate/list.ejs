@@ -1,12 +1,23 @@
 <%_
 // 本表是否有配置 字典数据 的字段
-const _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
+let _hasDict = fieldList.some((fieldItem) => fieldItem.dict != '')
 // 本表 配置的字典标识数组（去重过的）
-const _uniDictList = [...new Set(fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
+let _uniDictList = [...new Set(fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
 // 本表是否有配置 搜索 的字段
 const _hasQuery = fieldList.some((fieldItem) => fieldItem.query != '')
 // 主键字段数据
 const pkField =  fieldList.find((item) => item.key === 'PRI') || {}
+
+if (subTable) {
+  // 子表表是否有配置 字典数据 的字段
+  const _hasDictSub = _sub.fieldList.some((fieldItem) => fieldItem.dict != '')
+  // 子表表是否有配置 字典数据 的字段
+  const _uniDictListSub = [...new Set(_sub.fieldList.filter((fieldItem) => fieldItem.dict != '').map((item) => item.dict))]
+  // 包含子表是否配置字典
+  _hasDict = _hasDict ?  _hasDict : _hasDictSub
+  // 包含子表字典标识数组（去重过的）
+  _uniDictList = [...new Set([..._uniDictList, ..._uniDictListSub])]
+}
 _%>
 <template>
   <div class="app-container">
@@ -223,6 +234,7 @@ import AddOrEdit from './addOrEdit.vue'
 <%_ } _%>
 
 const { proxy } = getCurrentInstance()
+<%= _uniDictList.length %>
 <%_
 // 字典 js变量 js方法参数 处理
 let dictsDot = "";

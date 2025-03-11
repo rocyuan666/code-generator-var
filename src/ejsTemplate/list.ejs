@@ -226,7 +226,7 @@ import { cloneDeep } from 'lodash-es'
 import { labelValueToKeyValue } from '@/utils/roc'
 <%_ } _%>
 <%_ if (hasExport) { _%>
-import { exportJsonToExcel, exportFormatJson } from '@/utils/excel'
+import { exportExcel } from '@/utils/exportExcel'
 <%_ } _%>
 import { list<%= fn.snakeFormatHump(name, true) %><% if (hasDel) { %>, del<%= fn.snakeFormatHump(name, true) %><% } %><% if (hasExport) { %>, export<%= fn.snakeFormatHump(name, true) %><% } %> } from '@/api/<%= fn.snakeFormatHump(name) %>'
 <%_ if (hasAdd || hasEdit) { _%>
@@ -234,7 +234,6 @@ import AddOrEdit from './addOrEdit.vue'
 <%_ } _%>
 
 const { proxy } = getCurrentInstance()
-<%= _uniDictList.length %>
 <%_
 // 字典 js变量 js方法参数 处理
 let dictsDot = "";
@@ -377,38 +376,18 @@ watch([<%- dictsDot %>], ([<%- dictsDot %>]) => {
  */
 function handleExport() {
   btnExportLoading.value = true
-  <%_
-  // 导出 表头&数据 处理
-  let headerText = ""
-  let fieldText = ""
-  for (let i in fieldList) {
-    const fieldName = fieldList[i].name
-    if (fieldList[i].list) {
-      // 加单位
-      let label = fieldList[i].label
-      const unit = fieldList[i].unit
-      if (unit != "") {
-        label = label + "（" + unit + "）";
-      }
-      if (i != fieldList.length - 1){
-        headerText += "'" + label + "', ";
-        fieldText += "'" + fieldName + "', ";
-      } else {
-        headerText += "'" + label + "'";
-        fieldText += "'" + fieldName + "'";
-      }
-    }
-  }
-  _%>
   const filename = '<%= comment %>'
-  const header = [<%- headerText %>]
-  const fields = [<%- fieldText %>]
+  const titleData = [
+  <%_ for (const field of fieldList) { _%>
+    <%_ const label = field.unit ? `${field.label}（${field.unit}）` : field.label _%>
+    { field: '<%= field.name %>', name: '<%= label %>' },
+  <%_ } _%>
+  ]
   if (selectTableData.value.length) {
     proxy.$modal
       .confirm('是否导出选中数据')
       .then(() => {
-        const data = exportFormatJson(fields, selectTableData.value<% if(_hasDict) { %>, dictKeyValue<% } %>)
-        exportJsonToExcel({ header, data, filename })
+        exportExcel(titleData, selectTableData.value, filename)
         proxy.$modal.msgSuccess('导出成功')
         btnExportLoading.value = false
       })
@@ -421,8 +400,7 @@ function handleExport() {
       .then(() => {
         export<%= fn.snakeFormatHump(name, true) %>(queryParams.value)
           .then((res) => {
-            const data = exportFormatJson(fields, res.data<% if(_hasDict) { %>, dictKeyValue<% } %>)
-            exportJsonToExcel({ header, data, filename })
+            exportExcel(titleData, res.data, filename)
             proxy.$modal.msgSuccess('导出成功')
             btnExportLoading.value = false
           })

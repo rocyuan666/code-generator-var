@@ -223,7 +223,7 @@ _%>
 import { ref, getCurrentInstance, provide, watch } from 'vue'
 import { cloneDeep } from 'lodash-es'
 <%_ if (_hasDict) { _%>
-import { labelValueToKeyValue } from '@/utils/roc'
+import { labelValueToKeyValue, handleExcelDictData } from '@/utils/roc'
 <%_ } _%>
 <%_ if (hasExport) { _%>
 import { exportExcel } from '@/utils/exportExcel'
@@ -386,8 +386,13 @@ function handleExport() {
   if (selectTableData.value.length) {
     proxy.$modal
       .confirm('是否导出选中数据')
-      .then(() => {
-        exportExcel(titleData, selectTableData.value, filename)
+      .then(async () => {
+        <%_ if (_hasDict) { _%>
+        const _data = handleExcelDictData(selectTableData.value, dictKeyValue)
+        await exportExcel(titleData, _data, filename)
+        <%_ } else { _%>
+        await exportExcel(titleData, selectTableData.value, filename)
+        <%_ } _%>
         proxy.$modal.msgSuccess('导出成功')
         btnExportLoading.value = false
       })
@@ -399,8 +404,13 @@ function handleExport() {
       .confirm('是否导出全部数据')
       .then(() => {
         export<%= fn.snakeFormatHump(name, true) %>(queryParams.value)
-          .then((res) => {
-            exportExcel(titleData, res.data, filename)
+          .then(async (res) => {
+            <%_ if (_hasDict) { _%>
+            const _data = handleExcelDictData(res.data, dictKeyValue)
+            await exportExcel(titleData, _data, filename)
+            <%_ } else { _%>
+            await exportExcel(titleData, res.data, filename)
+            <%_ } _%>
             proxy.$modal.msgSuccess('导出成功')
             btnExportLoading.value = false
           })
